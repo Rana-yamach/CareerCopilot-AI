@@ -59,8 +59,47 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 - **Daily Scrum**: 
 - **Sprint board update**: Sprint board screenshotları: 
 - **Ürün Durumu**: Ekran görüntüleri:
-- **Sprint Review**: 
+  
+- **Sprint Review**:
+  
+Bu sprintte CareerAI projesinin temel kullanıcı arayüzü başarıyla geliştirildi. Kullanıcının kariyer gelişim sürecini tek platform üzerinden yönetebilmesi amacıyla Dashboard, CV yükleme, CV düzenleme, GitHub entegrasyonu, beceri boşluğu analizi, kariyer yol haritası, mülakat simülasyonu ve AI sohbet ekranları tasarlanıp çalışır hale getirildi. 
+
+Sprint sonunda kullanıcı; 
+
+-Sisteme kayıt olabilmekte ve giriş yapabilmektedir.  
+-CV dosyasını sisteme yükleyebilmektedir.  
+-CV bilgilerinde düzenleme yapabilmektedir.  
+-GitHub hesabını sisteme bağlayabilmektedir.  
+-Beceri boşluğu analizini görüntüleyebilmektedir.  
+-AI tarafından oluşturulan kariyer yol haritasını inceleyebilmektedir.  
+-AI destekli mülakat simülasyonu başlatabilmektedir.  
+-AI Chat ekranı üzerinden kariyer tavsiyesi alabilmektedir.  
+
+Sprint hedefleri büyük ölçüde gerçekleştirilmiş olup frontend tarafındaki temel kullanıcı deneyimi tamamlanmıştır. Sonraki sprintte backend servisleri, çoklu AI Agent yapısı ve gerçek zamanlı analizlerin entegrasyonu planlanmaktadır.
+
 - **Sprint Retrospective:**
   
+Neler iyi gitti? 
+
+-Uygulamanın temel sayfaları planlanan süre içerisinde tamamlandı.  
+-Tüm ekranlarda ortak ve tutarlı bir kullanıcı arayüzü oluşturuldu.  
+-Kullanıcı akışı (Login → Dashboard → Analiz → Roadmap → Interview) başarıyla tasarlandı.  
+-Modüler sayfa yapısı sayesinde ileride backend entegrasyonu kolaylaştırıldı.  
+
+Karşılaşılan Zorluklar 
+
+-AI servisleri henüz backend ile entegre edilmediği için bazı ekranlarda örnek (mock) veriler kullanıldı.  
+-Sayfalar arasında veri aktarımı planlanandan daha fazla zaman aldı.  
+-CV ve GitHub entegrasyonlarının gerçek API bağlantıları sonraki sprintlere bırakıldı.  
+
+Gelecek Sprintte Yapılacaklar 
+
+-Backend API entegrasyonlarının tamamlanması.  
+-Çoklu AI Agent mimarisinin geliştirilmesi (CV Agent, Skill Gap Agent, Roadmap Agent ve Interview Agent).  
+-LinkedIn entegrasyonunun eklenmesi.  
+-AI analizlerinin gerçek LLM servisleriyle çalıştırılması.  
+-Son kullanıcı testleri ve performans optimizasyonlarının yapılması.  
+
+Bu sprint sonunda CareerAI projesinin kullanıcı arayüzü büyük ölçüde tamamlanmış olup, bir sonraki sprintte sistemin yapay zekâ destekli karar mekanizmaları ve veri işleme süreçlerinin geliştirilmesine odaklanılacaktır.
 
 ---
