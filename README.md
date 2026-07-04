@@ -53,6 +53,8 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 
 ## Product Backlog URL
 
+https://miro.com/app/board/uXjVHHXhof0=/
+
 # Sprint 1
 
 - ****:
