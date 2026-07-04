@@ -58,7 +58,7 @@ https://miro.com/app/board/uXjVHHXhof0=/
 # Sprint 1
 
 - ****:
-- **Daily Scrum**: 
+- **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
 - **Sprint board update**: Sprint board screenshotları: 
 - **Ürün Durumu**: Ekran görüntüleri:
   
