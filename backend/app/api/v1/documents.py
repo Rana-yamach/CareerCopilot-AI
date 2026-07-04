@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import uuid
 
-from fastapi import APIRouter, Depends, File, Form, UploadFile
+from fastapi import APIRouter, Depends, File, Form, Response, UploadFile
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -21,7 +21,12 @@ from app.schemas.document import (
     ParsedSkills,
     UploadDocumentResponse,
 )
-from app.services.document_service import build_upload_path, mock_parsed_skills, save_upload_bytes
+from app.services.document_service import (
+    build_upload_path,
+    delete_upload_file,
+    mock_parsed_skills,
+    save_upload_bytes,
+)
 from app.utils.file_validators import (
     validate_document_type,
     validate_file_content_type,
@@ -144,3 +149,23 @@ async def get_document_status(
         status=document.status.value,
         error_message=document.error_message,
     )
+
+
+@router.delete("/{doc_id}", status_code=204)
+async def delete_document(
+    doc_id: uuid.UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Response:
+    document = await db.get(UploadedDocument, doc_id)
+    if document is None:
+        raise NotFoundError(MSG_DOCUMENT_NOT_FOUND, code="DOCUMENT_NOT_FOUND")
+    if document.user_id != current_user.id:
+        raise ForbiddenError(MSG_FORBIDDEN)
+
+    delete_upload_file(document.file_path)
+
+    await db.delete(document)
+    await db.commit()
+
+    return Response(status_code=204)

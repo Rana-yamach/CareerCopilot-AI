@@ -116,6 +116,11 @@ export const tr = {
     frameworks: 'Frameworkler',
     tools: 'Araçlar',
     uploadedDocumentsTitle: 'Yüklenen Belgeler',
+    deleteDocument: 'Sil',
+    deleting: 'Siliniyor...',
+    deleteConfirm: 'Bu belgeyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.',
+    deleteSuccess: 'Belge başarıyla silindi.',
+    deleteError: 'Belge silinirken bir hata oluştu.',
   },
 
   cvBuilder: {
@@ -362,6 +367,7 @@ export const tr = {
 
   errors: {
     NOT_FOUND: 'Kayıt bulunamadı.',
+    DOCUMENT_NOT_FOUND: 'Belge bulunamadı.',
     UNAUTHORIZED: 'Oturumunuz sona ermiş, lütfen tekrar giriş yapın.',
     FORBIDDEN: 'Bu kaynağa erişim yetkiniz yok.',
     CONFLICT: 'Bu kayıt zaten mevcut.',

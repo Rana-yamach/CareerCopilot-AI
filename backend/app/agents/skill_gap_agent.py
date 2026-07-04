@@ -51,20 +51,65 @@ def _merge_user_skills(documents_parsed_skills: list[dict]) -> set[str]:
 
 
 _BASELINE_SKILLS_BY_KEYWORD = {
-    "swe": ["Sistem Tasarımı", "Veri Yapıları ve Algoritmalar", "Dağıtık Sistemler"],
-    "backend": ["API Tasarımı", "Veritabanı Optimizasyonu", "Mikroservis Mimarisi"],
-    "frontend": ["Modern JavaScript Framework'leri", "Erişilebilirlik (a11y)", "Performans Optimizasyonu"],
-    "data": ["İstatistik ve Olasılık", "SQL İleri Sorgulama", "Makine Öğrenmesi Temelleri"],
-    "devops": ["Konteynerizasyon", "CI/CD Pipeline Kurulumu", "Bulut Altyapı Yönetimi"],
+    # Google SWE / genel yazılım mühendisliği
+    "swe": ["Sistem Tasarımı", "Veri Yapıları ve Algoritmalar", "Dağıtık Sistemler", "Big-O Analizi", "Code Review Pratikleri"],
+    "software engineer": ["Sistem Tasarımı", "Veri Yapıları ve Algoritmalar", "Dağıtık Sistemler", "Big-O Analizi"],
+    "yazılım mühendis": ["Sistem Tasarımı", "Veri Yapıları ve Algoritmalar", "Dağıtık Sistemler", "Big-O Analizi"],
+    "google": ["Sistem Tasarımı", "Veri Yapıları ve Algoritmalar", "Dağıtık Sistemler", "Big-O Analizi"],
+
+    # ML / Data Science / AI
+    "ml engineer": ["PyTorch/TensorFlow", "MLOps ve Model Deployment", "Feature Engineering", "İstatistik ve Olasılık"],
+    "machine learning": ["PyTorch/TensorFlow", "MLOps ve Model Deployment", "Feature Engineering", "İstatistik ve Olasılık"],
+    "makine öğrenmesi": ["PyTorch/TensorFlow", "MLOps ve Model Deployment", "Feature Engineering", "İstatistik ve Olasılık"],
+    "data scientist": ["İstatistik ve Olasılık", "SQL İleri Sorgulama", "Makine Öğrenmesi Temelleri", "Veri Görselleştirme"],
+    "veri bilimci": ["İstatistik ve Olasılık", "SQL İleri Sorgulama", "Makine Öğrenmesi Temelleri", "Veri Görselleştirme"],
+    "data": ["İstatistik ve Olasılık", "SQL İleri Sorgulama", "Makine Öğrenmesi Temelleri", "Veri Görselleştirme"],
+
+    # Frontend
+    "frontend": ["Modern JavaScript Framework'leri", "Erişilebilirlik (a11y)", "Performans Optimizasyonu", "TypeScript"],
+    "front-end": ["Modern JavaScript Framework'leri", "Erişilebilirlik (a11y)", "Performans Optimizasyonu", "TypeScript"],
+    "ön yüz": ["Modern JavaScript Framework'leri", "Erişilebilirlik (a11y)", "Performans Optimizasyonu", "TypeScript"],
+
+    # Backend
+    "backend": ["API Tasarımı", "Veritabanı Optimizasyonu", "Mikroservis Mimarisi", "Kimlik Doğrulama (JWT/OAuth2)"],
+    "back-end": ["API Tasarımı", "Veritabanı Optimizasyonu", "Mikroservis Mimarisi", "Kimlik Doğrulama (JWT/OAuth2)"],
+    "arka yüz": ["API Tasarımı", "Veritabanı Optimizasyonu", "Mikroservis Mimarisi", "Kimlik Doğrulama (JWT/OAuth2)"],
+
+    # DevOps
+    "devops": ["Konteynerizasyon", "CI/CD Pipeline Kurulumu", "Bulut Altyapı Yönetimi", "Infrastructure as Code", "Monitoring/Logging"],
+
+    # Mobile
+    "mobile": ["Native/Cross-platform Mobil Geliştirme", "Mobil UI/UX Prensipleri", "REST API Entegrasyonu", "Performans ve Bellek Yönetimi"],
+    "mobil": ["Native/Cross-platform Mobil Geliştirme", "Mobil UI/UX Prensipleri", "REST API Entegrasyonu", "Performans ve Bellek Yönetimi"],
+    "android": ["Kotlin/Java (Android)", "Mobil UI/UX Prensipleri", "REST API Entegrasyonu", "Performans ve Bellek Yönetimi"],
+    "ios": ["Swift (iOS)", "Mobil UI/UX Prensipleri", "REST API Entegrasyonu", "Performans ve Bellek Yönetimi"],
+
+    # Product Management
+    "product manager": ["Ürün Stratejisi ve Roadmap Yönetimi", "Veri Odaklı Karar Verme (A/B Testing)", "Paydaş Yönetimi", "Agile/Scrum"],
+    "ürün yönetici": ["Ürün Stratejisi ve Roadmap Yönetimi", "Veri Odaklı Karar Verme (A/B Testing)", "Paydaş Yönetimi", "Agile/Scrum"],
+    "product owner": ["Ürün Stratejisi ve Roadmap Yönetimi", "Veri Odaklı Karar Verme (A/B Testing)", "Paydaş Yönetimi", "Agile/Scrum"],
 }
 
 
+def _tr_lower(text: str) -> str:
+    """Türkçe "İ" harfini Python'un varsayılan `str.lower()` iki karaktere
+    ("i" + birleşen nokta) açmasının önüne geçen güvenli küçük harfe çevirme.
+    Bu olmadan "İOS Developer" gibi girdilerde "ios" anahtar kelimesi
+    sessizce eşleşmeyebilir.
+    """
+    return text.replace("İ", "i").replace("I", "ı").lower()
+
+
 def _heuristic_missing_skills(target_position: str, user_skills: set[str]) -> list[dict]:
-    lowered = target_position.lower()
+    lowered = _tr_lower(target_position)
     candidates: list[str] = []
+    seen: set[str] = set()
     for keyword, skills in _BASELINE_SKILLS_BY_KEYWORD.items():
         if keyword in lowered:
-            candidates.extend(skills)
+            for skill in skills:
+                if skill not in seen:
+                    seen.add(skill)
+                    candidates.append(skill)
     if not candidates:
         candidates = ["Sistem Tasarımı", "İletişim Becerileri", "Proje Yönetimi"]
 

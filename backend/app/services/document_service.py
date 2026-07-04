@@ -28,6 +28,21 @@ def save_upload_bytes(path: str, content: bytes) -> None:
         f.write(content)
 
 
+def delete_upload_file(file_path: str | None) -> None:
+    """Diskteki yüklenmiş dosyayı siler (TASK: DELETE /documents/{doc_id}).
+
+    Dosya yolu `None` ise veya dosya diskte yoksa sessizce geçer; hata fırlatmaz.
+    """
+    if not file_path:
+        return
+    try:
+        os.remove(file_path)
+    except FileNotFoundError:
+        return
+    except OSError:
+        logger.exception("Belge dosyası silinirken hata oluştu: %s", file_path)
+
+
 def extract_text_from_pdf(file_path: str) -> str:
     text_parts: list[str] = []
     with fitz.open(file_path) as doc:

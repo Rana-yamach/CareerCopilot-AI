@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react';
 import type { DragEvent } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { getLatestDocuments } from '@/api/documents';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
+import { deleteDocument, getLatestDocuments } from '@/api/documents';
+import { getApiErrorMessage } from '@/api/client';
 import { useDocumentUpload } from '@/hooks/useDocumentUpload';
 import { Spinner } from '@/components/ui/Spinner';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { tr } from '@/i18n/tr';
-import type { DocumentSummary, DocumentType } from '@/types/document';
+import type { DocumentSummary, DocumentType, LatestDocumentsResponse } from '@/types/document';
 
 const documentTypeLabel: Record<DocumentType, string> = {
   cv: tr.documents.documentTypeCv,
@@ -99,18 +101,35 @@ function UploadCard({ documentType, title }: UploadCardProps) {
   );
 }
 
-function DocumentCard({ doc }: { doc: DocumentSummary }) {
+interface DocumentCardProps {
+  doc: DocumentSummary;
+  onDelete: (docId: string) => void;
+  isDeleting: boolean;
+}
+
+function DocumentCard({ doc, onDelete, isDeleting }: DocumentCardProps) {
   return (
     <div className="card">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <span className="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
           {documentTypeLabel[doc.document_type]}
         </span>
-        {doc.cv_score !== null && (
-          <span className="text-sm font-semibold text-gray-900">
-            {tr.documents.cvScore}: {doc.cv_score}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {doc.cv_score !== null && (
+            <span className="text-sm font-semibold text-gray-900">
+              {tr.documents.cvScore}: {doc.cv_score}
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={() => onDelete(doc.document_id)}
+            disabled={isDeleting}
+            aria-label={tr.documents.deleteDocument}
+            className="rounded-md px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {isDeleting ? tr.documents.deleting : tr.documents.deleteDocument}
+          </button>
+        </div>
       </div>
       {doc.cv_score_explanation && (
         <p className="mt-2 text-sm text-gray-600">{doc.cv_score_explanation}</p>
@@ -144,10 +163,41 @@ function DocumentCard({ doc }: { doc: DocumentSummary }) {
 }
 
 export function DocumentUploadPage() {
+  const queryClient = useQueryClient();
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
   const latestDocsQuery = useQuery({
     queryKey: ['latestDocuments'],
     queryFn: getLatestDocuments,
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: (docId: string) => deleteDocument(docId),
+    onMutate: (docId) => {
+      setDeletingId(docId);
+    },
+    onSuccess: (_data, docId) => {
+      queryClient.setQueryData<LatestDocumentsResponse>(['latestDocuments'], (previous) =>
+        previous
+          ? { documents: previous.documents.filter((doc) => doc.document_id !== docId) }
+          : previous,
+      );
+      toast.success(tr.documents.deleteSuccess);
+    },
+    onError: (error) => {
+      toast.error(getApiErrorMessage(error) || tr.documents.deleteError);
+    },
+    onSettled: () => {
+      setDeletingId(null);
+      queryClient.invalidateQueries({ queryKey: ['latestDocuments'] });
+    },
+  });
+
+  function handleDelete(docId: string) {
+    const confirmed = window.confirm(tr.documents.deleteConfirm);
+    if (!confirmed) return;
+    deleteMutation.mutate(docId);
+  }
 
   return (
     <div className="space-y-6">
@@ -170,7 +220,12 @@ export function DocumentUploadPage() {
         {latestDocsQuery.data && latestDocsQuery.data.documents.length > 0 && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {latestDocsQuery.data.documents.map((doc) => (
-              <DocumentCard key={doc.document_id} doc={doc} />
+              <DocumentCard
+                key={doc.document_id}
+                doc={doc}
+                onDelete={handleDelete}
+                isDeleting={deletingId === doc.document_id}
+              />
             ))}
           </div>
         )}

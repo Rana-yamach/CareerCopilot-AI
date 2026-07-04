@@ -39,3 +39,7 @@ export async function listDocuments(params?: {
   const { data } = await apiClient.get<DocumentListResponse>('/documents', { params });
   return data;
 }
+
+export async function deleteDocument(docId: string): Promise<void> {
+  await apiClient.delete(`/documents/${docId}`);
+}
