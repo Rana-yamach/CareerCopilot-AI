@@ -1,0 +1,23 @@
+"""Celery uygulaması (TASK-107). Broker/backend: Redis."""
+from celery import Celery
+
+from app.config import settings
+
+celery_app = Celery(
+    "careercopilot",
+    broker=settings.redis_url,
+    backend=settings.redis_url,
+    include=[
+        "app.tasks.document_tasks",
+        "app.tasks.analysis_tasks",
+    ],
+)
+
+celery_app.conf.update(
+    task_serializer="json",
+    accept_content=["json"],
+    result_serializer="json",
+    timezone="UTC",
+    enable_utc=True,
+    task_track_started=True,
+)

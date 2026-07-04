@@ -1,0 +1,68 @@
+"""CV Draft domain servisi (TASK-108, TASK-204, TASK-209)."""
+from __future__ import annotations
+
+import os
+import uuid
+
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.constants import MSG_CV_NOT_GENERATED_YET
+from app.core.exceptions import ConflictError
+from app.models.cv_draft import CVDraft
+from app.models.enums import CVDraftStatus, DocumentSource, DocumentType, ProcessingStatus
+from app.models.uploaded_document import UploadedDocument
+from app.services.pdf_render_service import render_cv_pdf
+
+
+async def create_draft(db: AsyncSession, user_id: uuid.UUID, form_data: dict, output_language: str) -> CVDraft:
+    draft = CVDraft(
+        user_id=user_id,
+        form_data=form_data,
+        output_language=output_language,
+        status=CVDraftStatus.DRAFT,
+    )
+    db.add(draft)
+    await db.commit()
+    await db.refresh(draft)
+    return draft
+
+
+async def export_draft_to_pdf(
+    db: AsyncSession, draft: CVDraft, language: str, upload_dir: str
+) -> tuple[UploadedDocument, bytes]:
+    if draft.status == CVDraftStatus.DRAFT:
+        raise ConflictError(MSG_CV_NOT_GENERATED_YET)
+
+    text = draft.user_edited_text or (
+        draft.generated_text_tr if language == "tr" else draft.generated_text_en
+    )
+    text = text or ""
+
+    personal = (draft.form_data or {}).get("personal", {})
+    pdf_bytes = render_cv_pdf(name=personal.get("name", ""), email=personal.get("email", ""), body_text=text)
+
+    user_dir = os.path.join(upload_dir, str(draft.user_id))
+    os.makedirs(user_dir, exist_ok=True)
+    file_path = os.path.join(user_dir, f"cv_{draft.id}.pdf")
+    with open(file_path, "wb") as f:
+        f.write(pdf_bytes)
+
+    document = UploadedDocument(
+        user_id=draft.user_id,
+        document_type=DocumentType.GENERATED_CV,
+        file_path=file_path,
+        raw_text=text,
+        parsed_skills={},
+        source=DocumentSource.GENERATED,
+        status=ProcessingStatus.COMPLETED,
+    )
+    db.add(document)
+    await db.flush()
+
+    draft.uploaded_document_id = document.id
+    draft.status = CVDraftStatus.EXPORTED
+
+    await db.commit()
+    await db.refresh(document)
+
+    return document, pdf_bytes

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<title>{{ name }} - CV</title>
+<style>
+  @page { size: A4; margin: 2cm; }
+  body {
+    font-family: "DejaVu Sans", "Noto Sans", sans-serif;
+    color: #1f2937;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+  h1 { font-size: 20pt; margin-bottom: 0.1em; }
+  .contact { color: #4b5563; font-size: 9.5pt; margin-bottom: 1.2em; }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: "DejaVu Sans", "Noto Sans", sans-serif;
+    font-size: 11pt;
+  }
+</style>
+</head>
+<body>
+  <h1>{{ name }}</h1>
+  <div class="contact">{{ email }}</div>
+  <pre>{{ body_text }}</pre>
+</body>
+</html>
