@@ -57,7 +57,35 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 
 # Sprint 1
 
-- ****:
+
+---
+
+- **📋 Backlog Düzeni ve Story Seçimleri (Backlog Design & Story Selection)**
+
+CareerCopilot AI projemizin geliştirme sürecinde şeffaflığı, planlamayı ve izlenebilirliği en üst düzeyde tutmak amacıyla Miro Board üzerinde çevik (**Scrum**) prensiplere dayalı profesyonel bir backlog yapısı kurgulanmıştır. Backlog düzenimiz ve sprint seçim stratejimiz şu kurallar çerçevesinde şekillendirilmiştir:
+
+**Öncelik Esaslı Sıralama:** Backlog'umuz, kullanıcıya en hızlı şekilde değer yaratacak ve projenin teknik temelini oluşturacak ilk yapılacak story'lere (kullanıcı hikayelerine) göre yukarıdan aşağıya doğru sıralanmıştır. Geliştirme sırası bu öncelik hiyerarşisine göre belirlenmektedir.
+**Sprint Limitine Uyum:** Sprint planlama toplantılarında, sprint başına tahmin edilen *story point (SP)* kapasitesini aşmayacak şekilde sırasıyla en üstteki işler seçilerek sprint içerisine dahil edilmiştir.
+**Risk ve Kapsam Yönetimi:** Büyük iş parçalarının geliştirme sürecini tıkamasını (blocker) önlemek amacıyla, story başına düşen tahmin puanı projenin toplam puan bütçesinin (100 SP) yarısından (50 SP'den) daima çok daha az tutulmuştur. Böylece projenin sürdürülebilirliği güvence altına alınmıştır.
+
+**Görsel Kart Yapısı (Miro Legend)**
+
+Miro panomuzda işlerin türünü kolayca ayırt edebilmek için net bir renk kodlaması uygulanmıştır:
+
+| Renk | Kategori | Açıklama |
+| --- | --- | --- |
+| 🔵 | **User Stories** | Sistemin kullanıcıya katacağı değeri ve kabul kriterlerini içeren ana fonksiyonel modüllerdir. |
+| 🔴 | **Technical Tasks** | Kullanıcı hikayelerini hayata geçirmek için gereken teknik alt görevler (veritabanı şeması, API, test vb.). |
+
+> **Not:** Her bir mavi *story*, kendi altında ilişkili kırmızı *task*'lere bölünmüştür.
+
+---
+
+**📊 Sprint 1 İtibarıyla Story Point Özeti**
+
+**Toplam Proje Puanı:** 100 SP
+**Sprint 1 Planlanan / Tamamlanan:** 15 SP / 15 SP (**İlerleme: %100**)
+**En Büyük Story Puanı:** 5 SP (Toplam puanın %5'i seviyesinde tutularak risk minimize edilmiştir).
 - **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
 - **Sprint board update**: Sprint board screenshotları:
   <img width="966" height="875" alt="image" src="https://github.com/user-attachments/assets/85be2417-1934-4bb8-8e82-d22d469c8fff" />
