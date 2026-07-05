@@ -59,11 +59,9 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 
 - ****:
 - **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
-- **Sprint board update**:
-- Sprint board screenshotları:
+- **Sprint board update**: Sprint board screenshotları:
   <img width="966" height="875" alt="image" src="https://github.com/user-attachments/assets/85be2417-1934-4bb8-8e82-d22d469c8fff" />
-- **Ürün Durumu**:
-- Ekran görüntüleri:
+- **Ürün Durumu**: Ekran görüntüleri:
   <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230452" src="https://github.com/user-attachments/assets/f9208faf-30cf-4549-9e55-cc1deed5550a" />
   <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230436" src="https://github.com/user-attachments/assets/f0fb8a95-2476-4234-89f3-6a3f57fa2b4c" />
   <img width="1874" height="970" alt="Ekran görüntüsü 2026-07-03 230059" src="https://github.com/user-attachments/assets/9ec6454d-ffeb-410b-bdbf-9ad8018f1391" />
