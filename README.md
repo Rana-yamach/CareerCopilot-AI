@@ -61,6 +61,21 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 - **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
 - **Sprint board update**: Sprint board screenshotları: 
 - **Ürün Durumu**: Ekran görüntüleri:
+  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230452" src="https://github.com/user-attachments/assets/f9208faf-30cf-4549-9e55-cc1deed5550a" />
+  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230436" src="https://github.com/user-attachments/assets/f0fb8a95-2476-4234-89f3-6a3f57fa2b4c" />
+  <img width="1874" height="970" alt="Ekran görüntüsü 2026-07-03 230059" src="https://github.com/user-attachments/assets/9ec6454d-ffeb-410b-bdbf-9ad8018f1391" />
+  <img width="1875" height="969" alt="Ekran görüntüsü 2026-07-03 230146" src="https://github.com/user-attachments/assets/a5f33d00-c8aa-4e9a-9cb4-9341abcb1d1e" />
+  <img width="1875" height="971" alt="Ekran görüntüsü 2026-07-03 230212" src="https://github.com/user-attachments/assets/f2c50761-e1b1-4852-aff6-682d0b4d40ac" />
+  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230231" src="https://github.com/user-attachments/assets/6162f813-2c5c-467d-8320-e603bbce58c9" />
+  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230255" src="https://github.com/user-attachments/assets/5c195d5d-0ce0-4058-9cc2-79583eded8f3" />
+  <img width="1877" height="969" alt="Ekran görüntüsü 2026-07-03 230321" src="https://github.com/user-attachments/assets/f691580f-bea5-49ce-a0db-627b52313594" />
+  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230348" src="https://github.com/user-attachments/assets/6aee3d9d-74fc-45d7-82c6-3430a6298d36" />
+  <img width="1878" height="970" alt="Ekran görüntüsü 2026-07-03 230406" src="https://github.com/user-attachments/assets/884f0662-9bd3-4804-b13c-a5a0c03339bf" />
+  
+
+
+
+
   
 - **Sprint Review**:
   
