@@ -59,8 +59,11 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
 
 - ****:
 - **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
-- **Sprint board update**: Sprint board screenshotları: 
-- **Ürün Durumu**: Ekran görüntüleri:
+- **Sprint board update**:
+- Sprint board screenshotları:
+  <img width="966" height="875" alt="image" src="https://github.com/user-attachments/assets/85be2417-1934-4bb8-8e82-d22d469c8fff" />
+- **Ürün Durumu**:
+- Ekran görüntüleri:
   <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230452" src="https://github.com/user-attachments/assets/f9208faf-30cf-4549-9e55-cc1deed5550a" />
   <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230436" src="https://github.com/user-attachments/assets/f0fb8a95-2476-4234-89f3-6a3f57fa2b4c" />
   <img width="1874" height="970" alt="Ekran görüntüsü 2026-07-03 230059" src="https://github.com/user-attachments/assets/9ec6454d-ffeb-410b-bdbf-9ad8018f1391" />
@@ -71,12 +74,7 @@ Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık ç
   <img width="1877" height="969" alt="Ekran görüntüsü 2026-07-03 230321" src="https://github.com/user-attachments/assets/f691580f-bea5-49ce-a0db-627b52313594" />
   <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230348" src="https://github.com/user-attachments/assets/6aee3d9d-74fc-45d7-82c6-3430a6298d36" />
   <img width="1878" height="970" alt="Ekran görüntüsü 2026-07-03 230406" src="https://github.com/user-attachments/assets/884f0662-9bd3-4804-b13c-a5a0c03339bf" />
-  
-
-
-
-
-  
+    
 - **Sprint Review**:
   
 Bu sprintte CareerAI projesinin temel kullanıcı arayüzü başarıyla geliştirildi. Kullanıcının kariyer gelişim sürecini tek platform üzerinden yönetebilmesi amacıyla Dashboard, CV yükleme, CV düzenleme, GitHub entegrasyonu, beceri boşluğu analizi, kariyer yol haritası, mülakat simülasyonu ve AI sohbet ekranları tasarlanıp çalışır hale getirildi. 
