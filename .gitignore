@@ -1,0 +1,45 @@
+# Environment
+.env
+.env.local
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Backend uploads (local dev artifacts)
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Node / Frontend
+node_modules/
+dist/
+.vite/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local machine-specific TLS-intercepting CA certs (e.g. corporate AV SSL scanning).
+# Never commit these; only needed for local Docker builds behind such proxies.
+backend/docker/extra-ca-certificates/*
+!backend/docker/extra-ca-certificates/.gitkeep
+
+# AI datasets (large raw files, keep curated/processed tracked)
+ai/data/raw/*
+!ai/data/raw/.gitkeep
