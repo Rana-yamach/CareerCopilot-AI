@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { Headphones, Rocket, Search, SignalLow, SignalMedium } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { getInterviewSummary, startInterview, submitAnswer } from '@/api/interview';
 import { getApiErrorMessage } from '@/api/client';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { Spinner } from '@/components/ui/Spinner';
 import { ErrorState } from '@/components/ui/ErrorState';
@@ -34,9 +35,9 @@ function formatTime(totalSeconds: number): string {
   return `${minutes}:${seconds}`;
 }
 
-const difficultyOptions: { value: InterviewDifficulty; label: string }[] = [
-  { value: 'junior', label: tr.interview.difficultyJunior },
-  { value: 'mid', label: tr.interview.difficultyMid },
+const difficultyOptions: { value: InterviewDifficulty; label: string; icon: LucideIcon }[] = [
+  { value: 'junior', label: tr.interview.difficultyJunior, icon: SignalLow },
+  { value: 'mid', label: tr.interview.difficultyMid, icon: SignalMedium },
 ];
 
 const categoryOptions: { value: InterviewCategory; label: string }[] = [
@@ -150,49 +151,79 @@ export function InterviewPage() {
     return (
       <div className="mx-auto max-w-xl space-y-6">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">{tr.interview.title}</h1>
-          <p className="mt-1 text-sm text-gray-500">{tr.interview.subtitle}</p>
+          <h1 className="text-2xl font-semibold text-default">{tr.interview.title}</h1>
+          <p className="mt-1 text-sm text-faint">{tr.interview.subtitle}</p>
         </div>
 
         <form onSubmit={handleStart} className="card space-y-5">
-          <h2 className="text-base font-semibold text-gray-900">{tr.interview.setupTitle}</h2>
-
-          <Input
-            label={tr.interview.targetPositionLabel}
-            placeholder={tr.interview.targetPositionPlaceholder}
-            value={targetPosition}
-            onChange={(event) => setTargetPosition(event.target.value)}
-          />
-
-          <div>
-            <p className="label">{tr.interview.difficultyLabel}</p>
-            <div className="flex gap-4">
-              {difficultyOptions.map((opt) => (
-                <label key={opt.value} className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
-                    type="radio"
-                    name="difficulty"
-                    checked={difficulty === opt.value}
-                    onChange={() => setDifficulty(opt.value)}
-                    className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
-                  />
-                  {opt.label}
-                </label>
-              ))}
+          <div className="flex items-center gap-3 border-b border-border pb-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-400">
+              <Headphones aria-hidden="true" className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="text-base font-semibold text-default">{tr.interview.setupTitle}</h2>
+              <p className="text-sm text-faint">{tr.interview.setupSubtitle}</p>
             </div>
           </div>
 
           <div>
-            <p className="label">{tr.interview.categoryLabel}</p>
+            <p className="label uppercase tracking-wide text-xs">{tr.interview.targetPositionLabel}</p>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder={tr.interview.targetPositionPlaceholder}
+                value={targetPosition}
+                onChange={(event) => setTargetPosition(event.target.value)}
+                className="input-field pr-10"
+              />
+              <Search
+                aria-hidden="true"
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint"
+              />
+            </div>
+          </div>
+
+          <div>
+            <p className="label uppercase tracking-wide text-xs">{tr.interview.difficultyLabel}</p>
+            <div className="grid grid-cols-2 gap-3">
+              {difficultyOptions.map((opt) => {
+                const Icon = opt.icon;
+                const selected = difficulty === opt.value;
+                return (
+                  <label
+                    key={opt.value}
+                    className={`flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border px-3 py-3 text-sm font-medium transition-colors ${
+                      selected
+                        ? 'border-primary-400 bg-primary-50 text-primary-700 dark:border-primary-500/60 dark:bg-primary-500/10 dark:text-primary-300'
+                        : 'border-border text-muted hover:border-primary-300 hover:bg-primary-50/40 dark:hover:bg-primary-500/10'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="difficulty"
+                      className="sr-only"
+                      checked={selected}
+                      onChange={() => setDifficulty(opt.value)}
+                    />
+                    <Icon aria-hidden="true" className="h-4 w-4" />
+                    {opt.label}
+                  </label>
+                );
+              })}
+            </div>
+          </div>
+
+          <div>
+            <p className="label uppercase tracking-wide text-xs">{tr.interview.categoryLabel}</p>
             <div className="flex flex-wrap gap-4">
               {categoryOptions.map((opt) => (
-                <label key={opt.value} className="flex items-center gap-2 text-sm text-gray-700">
+                <label key={opt.value} className="flex items-center gap-2 text-sm text-muted">
                   <input
                     type="radio"
                     name="category"
                     checked={category === opt.value}
                     onChange={() => setCategory(opt.value)}
-                    className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                    className="h-4 w-4 border-border text-primary-600 focus:ring-primary-500"
                   />
                   {opt.label}
                 </label>
@@ -200,11 +231,10 @@ export function InterviewPage() {
             </div>
           </div>
 
-          <div className="flex justify-end">
-            <Button type="submit" isLoading={startMutation.isPending}>
-              {startMutation.isPending ? tr.interview.starting : tr.interview.startButton}
-            </Button>
-          </div>
+          <Button type="submit" isLoading={startMutation.isPending} className="w-full gap-2">
+            {startMutation.isPending ? tr.interview.starting : tr.interview.startButton}
+            {!startMutation.isPending && <Rocket aria-hidden="true" className="h-4 w-4" />}
+          </Button>
         </form>
       </div>
     );
@@ -214,8 +244,8 @@ export function InterviewPage() {
     return (
       <div className="mx-auto max-w-2xl space-y-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900">{tr.interview.title}</h1>
-          <div className="text-right text-sm text-gray-500">
+          <h1 className="text-2xl font-semibold text-default">{tr.interview.title}</h1>
+          <div className="text-right text-sm text-faint">
             <p>{tr.interview.questionProgress(questionIndex + 1, TOTAL_QUESTIONS)}</p>
             <p>
               {tr.interview.timeElapsed}: {formatTime(elapsedSeconds)}
@@ -223,15 +253,19 @@ export function InterviewPage() {
           </div>
         </div>
 
-        <div className="h-2 w-full rounded-full bg-gray-100">
+        <div className="h-2 w-full rounded-full bg-surface-2">
           <div
-            className="h-2 rounded-full bg-primary-600 transition-all"
+            className="h-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all"
             style={{ width: `${Math.min(100, ((questionIndex + 1) / TOTAL_QUESTIONS) * 100)}%` }}
           />
         </div>
 
-        <div className="card">
-          <p className="text-base font-medium text-gray-900">{questionText}</p>
+        <div className="card relative overflow-hidden">
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-primary-500 to-accent-500"
+          />
+          <p className="pt-1 text-base font-medium text-default">{questionText}</p>
         </div>
 
         {!lastAnswered && (
@@ -254,15 +288,15 @@ export function InterviewPage() {
         {lastAnswered && (
           <div className="card space-y-3">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-gray-900">{tr.interview.feedbackTitle}</h2>
-              <span className="rounded-full bg-primary-50 px-3 py-1 text-sm font-semibold text-primary-700">
+              <h2 className="text-sm font-semibold text-default">{tr.interview.feedbackTitle}</h2>
+              <span className="rounded-full bg-primary-50 px-3 py-1 text-sm font-semibold text-primary-700 dark:bg-primary-500/15 dark:text-primary-300">
                 {tr.interview.scoreLabel}: {lastAnswered.score}/10
               </span>
             </div>
-            <p className="text-sm text-gray-700">{lastAnswered.feedback}</p>
+            <p className="text-sm text-muted">{lastAnswered.feedback}</p>
             {lastAnswered.correct_answer_hint && (
-              <p className="text-sm text-gray-500">
-                <span className="font-medium text-gray-700">{tr.interview.correctAnswerHint}:</span>{' '}
+              <p className="text-sm text-faint">
+                <span className="font-medium text-muted">{tr.interview.correctAnswerHint}:</span>{' '}
                 {lastAnswered.correct_answer_hint}
               </p>
             )}
@@ -283,7 +317,7 @@ export function InterviewPage() {
   // stage === 'summary'
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <h1 className="text-2xl font-semibold text-gray-900">{tr.interview.summaryTitle}</h1>
+      <h1 className="text-2xl font-semibold text-default">{tr.interview.summaryTitle}</h1>
 
       {summaryQuery.isLoading && <Spinner label={tr.interview.loadingSummary} />}
 
@@ -297,17 +331,17 @@ export function InterviewPage() {
       {summaryQuery.data && (
         <div className="space-y-4">
           <div className="card flex items-center justify-between">
-            <span className="text-sm font-medium text-gray-700">{tr.interview.overallScore}</span>
-            <span className="text-2xl font-bold text-primary-700">
+            <span className="text-sm font-medium text-muted">{tr.interview.overallScore}</span>
+            <span className="bg-gradient-to-r from-primary-600 to-accent-500 bg-clip-text text-2xl font-bold text-transparent">
               {summaryQuery.data.overall_score}
             </span>
           </div>
 
           <div className="card">
-            <h2 className="mb-2 text-sm font-semibold text-gray-900">
+            <h2 className="mb-2 text-sm font-semibold text-default">
               {tr.interview.strengthsTitle}
             </h2>
-            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700">
+            <ul className="list-inside list-disc space-y-1 text-sm text-muted">
               {summaryQuery.data.strengths.map((strength) => (
                 <li key={strength}>{strength}</li>
               ))}
@@ -315,10 +349,10 @@ export function InterviewPage() {
           </div>
 
           <div className="card">
-            <h2 className="mb-2 text-sm font-semibold text-gray-900">
+            <h2 className="mb-2 text-sm font-semibold text-default">
               {tr.interview.improvementsTitle}
             </h2>
-            <ul className="list-inside list-disc space-y-1 text-sm text-gray-700">
+            <ul className="list-inside list-disc space-y-1 text-sm text-muted">
               {summaryQuery.data.improvements.map((improvement) => (
                 <li key={improvement}>{improvement}</li>
               ))}

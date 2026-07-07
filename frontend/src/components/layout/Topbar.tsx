@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Menu } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { tr } from '@/i18n/tr';
 
 interface TopbarProps {
@@ -19,25 +21,24 @@ export function Topbar({ onMenuClick }: TopbarProps) {
   }
 
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 sm:px-6">
+    <header className="flex h-16 items-center justify-between border-b border-border bg-surface/80 px-4 backdrop-blur-md sm:px-6">
       <button
         type="button"
         onClick={onMenuClick}
-        className="rounded-md p-2 text-gray-600 hover:bg-gray-100 lg:hidden"
+        className="rounded-lg p-2 text-muted hover:bg-surface-2 hover:text-default lg:hidden"
         aria-label="Menüyü aç"
       >
-        <span aria-hidden="true">☰</span>
+        <Menu aria-hidden="true" className="h-5 w-5" />
       </button>
 
       <div className="hidden lg:block" />
 
-      <div className="flex items-center gap-4">
-        <span className="text-sm font-medium text-gray-700">{user?.email}</span>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="btn-secondary !px-3 !py-1.5 text-sm"
-        >
+      <div className="flex items-center gap-3 sm:gap-4">
+        <ThemeToggle />
+        <span className="max-w-[7rem] truncate text-sm font-medium text-muted sm:max-w-[12rem]">
+          {user?.email}
+        </span>
+        <button type="button" onClick={handleLogout} className="btn-secondary !px-3 !py-1.5 text-sm">
           {tr.common.logout}
         </button>
       </div>

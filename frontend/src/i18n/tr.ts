@@ -29,6 +29,9 @@ export const tr = {
     logout: 'Çıkış Yap',
     logoutSuccess: 'Çıkış yapıldı.',
     settings: 'Ayarlar',
+    switchToLightMode: 'Açık temaya geç',
+    switchToDarkMode: 'Koyu temaya geç',
+    toggleThemeSr: 'Tema seçici',
   },
 
   nav: {
@@ -44,7 +47,12 @@ export const tr = {
 
   auth: {
     loginTitle: 'Giriş Yap',
+    loginSubtitle: 'Kariyer yolculuğuna kaldığın yerden devam et.',
     registerTitle: 'Kayıt Ol',
+    registerSubtitle: 'Birkaç adımda kariyer koçuna erişim kazan.',
+    brandHeadline: 'Kariyer yolculuğunda yapay zeka destekli rehberin.',
+    brandSubline:
+      "CV'ni analiz et, beceri boşluklarını keşfet, kişiselleştirilmiş bir yol haritası çıkar ve mülakatlara Türkçe pratik yaparak hazırlan.",
     email: 'E-posta',
     emailPlaceholder: 'ornek@sirket.com',
     password: 'Şifre',
@@ -86,8 +94,18 @@ export const tr = {
     startAnalysisCta: 'Analiz Başlat',
     startRoadmapCta: 'Yol Haritası Oluştur',
     startInterviewCta: 'Mülakata Başla',
+    stepsLabel: 'Adım',
+    cvBuilderHeroTitle: 'AI CV Oluşturucu',
+    startCvBuilderCta: 'CV Oluşturmaya Başla',
     cvBuilderPromo:
-      "CV'nizi bölüm bölüm doldurun, yapay zeka desteğiyle profesyonel bir metne dönüştürün.",
+      "Kariyer hedeflerinize uygun, ATS uyumlu ve profesyonel bir CV oluşturun. Yapay zeka desteğiyle yeteneklerinizi en iyi şekilde vurgulayın ve hayalinizdeki işe bir adım daha yaklaşın.",
+    interviewQuality: (score: number): string => {
+      if (score >= 9) return 'Mükemmel';
+      if (score >= 7) return 'Çok İyi';
+      if (score >= 5) return 'İyi';
+      if (score >= 3) return 'Orta';
+      return 'Geliştirilmeli';
+    },
   },
 
   documents: {
@@ -302,6 +320,7 @@ export const tr = {
     title: 'Mülakat Simülasyonu',
     subtitle: 'Hedef pozisyonunuza özel sorularla mülakat pratiği yapın.',
     setupTitle: 'Mülakatı Başlat',
+    setupSubtitle: 'Simülasyon ayarlarınızı yapılandırın.',
     targetPositionLabel: 'Hedef Pozisyon',
     targetPositionPlaceholder: 'ör. Google SWE L3',
     targetPositionRequired: 'Hedef pozisyon zorunludur.',
@@ -347,6 +366,15 @@ export const tr = {
     noMessages: 'Bu oturumda henüz mesaj yok. Bir soru sorarak başlayın.',
     loadingMessages: 'Mesajlar yükleniyor...',
     errorSending: 'Mesaj gönderilirken bir hata oluştu.',
+    newSessionCta: 'Yeni Sohbet Başlat',
+    newSessionCtaSubtitle: 'Asistanla görüşmeye başla',
+    heroTitle: 'Kariyer Asistanına Hoş Geldin',
+    heroSubtitle:
+      'Bu oturumda henüz mesaj yok. Kariyerin, özgeçmişin veya mülakat hazırlıkların hakkında bir soru sorarak başlayın.',
+    suggestion1: 'Özgeçmişimi nasıl geliştirebilirim?',
+    suggestion2: 'Teknik mülakat soruları neler?',
+    suggestion3: 'Yazılım mühendisi maaşları hakkında bilgi ver',
+    disclaimer: 'CareerCopilot AI hata yapabilir. Önemli bilgileri kontrol edin.',
     you: 'Siz',
     assistant: 'CareerCopilot',
     agentLabels: {

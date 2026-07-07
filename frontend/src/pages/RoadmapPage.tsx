@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { Check, ChevronDown, ChevronUp } from 'lucide-react';
 import { generateRoadmap, getActiveRoadmap, getRoadmap, updateRoadmapTask } from '@/api/roadmap';
 import { getLatestSkillGap } from '@/api/skillGap';
 import { getApiErrorMessage } from '@/api/client';
@@ -37,39 +38,49 @@ function WeekCard({
         aria-expanded={isExpanded}
       >
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-primary-600">
+          <p className="text-xs font-medium uppercase tracking-wide text-primary-600 dark:text-primary-400">
             {tr.roadmap.weekLabel(week.week)}
           </p>
-          <p className="text-base font-semibold text-gray-900">{week.theme}</p>
-          <p className="text-xs text-gray-500">
+          <p className="text-base font-semibold text-default">{week.theme}</p>
+          <p className="text-xs text-faint">
             {doneCount}/{week.tasks.length}
           </p>
         </div>
-        <span aria-hidden="true" className="text-lg leading-none text-gray-400">
-          {isExpanded ? '−' : '+'}
+        <span aria-hidden="true" className="text-faint">
+          {isExpanded ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
         </span>
       </button>
 
       {isExpanded && (
-        <ul className="mt-4 space-y-3 border-t border-gray-100 pt-4">
+        <ul className="mt-4 space-y-3 border-t border-border pt-4">
           {week.tasks.map((task) => (
             <li key={task.task_id} className="flex items-start gap-3">
-              <input
-                type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                checked={task.done}
-                disabled={isTaskPending(task.task_id)}
-                onChange={(event) => onTaskToggle(task.task_id, event.target.checked)}
-              />
+              <label className="relative mt-0.5 flex h-5 w-5 shrink-0 cursor-pointer items-center justify-center">
+                <input
+                  type="checkbox"
+                  className="peer sr-only"
+                  checked={task.done}
+                  disabled={isTaskPending(task.task_id)}
+                  onChange={(event) => onTaskToggle(task.task_id, event.target.checked)}
+                />
+                <span
+                  aria-hidden="true"
+                  className={`flex h-5 w-5 items-center justify-center rounded-md border-2 transition-colors peer-focus-visible:ring-2 peer-focus-visible:ring-primary-500 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-surface ${
+                    task.done
+                      ? 'border-primary-600 bg-primary-600'
+                      : 'border-border bg-surface hover:border-primary-300'
+                  } ${isTaskPending(task.task_id) ? 'opacity-50' : ''}`}
+                >
+                  {task.done && <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />}
+                </span>
+              </label>
               <div>
                 <p
-                  className={`text-sm font-medium ${task.done ? 'text-gray-400 line-through' : 'text-gray-800'}`}
+                  className={`text-sm font-medium ${task.done ? 'text-faint line-through' : 'text-default'}`}
                 >
                   {task.title}
                 </p>
-                {task.resource && (
-                  <p className="text-xs text-gray-500">{task.resource}</p>
-                )}
+                {task.resource && <p className="text-xs text-faint">{task.resource}</p>}
               </div>
             </li>
           ))}
@@ -201,8 +212,8 @@ export function RoadmapPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.roadmap.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.roadmap.subtitle}</p>
+        <h1 className="text-2xl font-semibold text-default">{tr.roadmap.title}</h1>
+        <p className="mt-1 text-sm text-faint">{tr.roadmap.subtitle}</p>
       </div>
 
       {activeQuery.isLoading && !roadmapId && <Spinner label={tr.common.loading} />}
@@ -224,14 +235,14 @@ export function RoadmapPage() {
         <div className="space-y-6">
           <div className="card">
             <div className="mb-2 flex items-center justify-between text-sm">
-              <span className="font-medium text-gray-700">{tr.roadmap.progressLabel}</span>
-              <span className="text-gray-500">
+              <span className="font-medium text-muted">{tr.roadmap.progressLabel}</span>
+              <span className="text-faint">
                 %{roadmap.progress_percent} · {tr.roadmap.totalWeeks(roadmap.weeks_total)}
               </span>
             </div>
-            <div className="h-2.5 w-full rounded-full bg-gray-100">
+            <div className="h-2.5 w-full rounded-full bg-surface-2">
               <div
-                className="h-2.5 rounded-full bg-primary-600 transition-all"
+                className="h-2.5 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 transition-all"
                 style={{ width: `${Math.max(0, Math.min(100, roadmap.progress_percent))}%` }}
               />
             </div>
@@ -239,13 +250,13 @@ export function RoadmapPage() {
 
           {roadmap.milestones.length > 0 && (
             <div className="card">
-              <h2 className="mb-3 text-sm font-semibold text-gray-900">
+              <h2 className="mb-3 text-sm font-semibold text-default">
                 {tr.roadmap.milestonesTitle}
               </h2>
-              <ul className="space-y-1 text-sm text-gray-600">
+              <ul className="space-y-1 text-sm text-muted">
                 {roadmap.milestones.map((milestone) => (
                   <li key={`${milestone.week}-${milestone.title}`}>
-                    <span className="font-medium text-gray-800">
+                    <span className="font-medium text-default">
                       {tr.roadmap.weekLabel(milestone.week)}:
                     </span>{' '}
                     {milestone.title}
@@ -290,7 +301,7 @@ export function RoadmapPage() {
 
       {!isGenerating && !roadmap && !activeQuery.isLoading && (
         <div className="card space-y-4">
-          <p className="text-sm text-gray-600">{tr.roadmap.noActiveRoadmap}</p>
+          <p className="text-sm text-muted">{tr.roadmap.noActiveRoadmap}</p>
 
           {effectiveReportId ? (
             <form onSubmit={handleGenerate} className="flex flex-col gap-4 sm:flex-row sm:items-end">
@@ -310,7 +321,7 @@ export function RoadmapPage() {
             </form>
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-gray-500">{tr.roadmap.needsSkillGap}</p>
+              <p className="text-sm text-faint">{tr.roadmap.needsSkillGap}</p>
               <Link to="/skill-gap" className="btn-primary inline-flex">
                 {tr.roadmap.goToSkillGap}
               </Link>

@@ -25,7 +25,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-describedby={error ? `${inputId}-error` : undefined}
           {...rest}
         />
-        {hint && !error && <p className="mt-1 text-sm text-gray-500">{hint}</p>}
+        {hint && !error && <p className="mt-1 text-sm text-faint">{hint}</p>}
         {error && (
           <p id={`${inputId}-error`} className="field-error" role="alert">
             {error}

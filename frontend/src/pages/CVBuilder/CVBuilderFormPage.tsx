@@ -3,6 +3,7 @@ import type { ComponentType } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useCVBuilderStore } from '@/store/cvBuilderStore';
 import { generateCV } from '@/api/cv';
 import { getApiErrorMessage } from '@/api/client';
@@ -135,16 +136,16 @@ export function CVBuilderFormPage() {
   return (
     <div className="mx-auto max-w-4xl space-y-6 pb-24">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.cvBuilder.formTitle}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.cvBuilder.formSubtitle}</p>
+        <h1 className="text-2xl font-semibold text-default">{tr.cvBuilder.formTitle}</h1>
+        <p className="mt-1 text-sm text-faint">{tr.cvBuilder.formSubtitle}</p>
       </div>
 
       {orderedSections.map((section, index) => {
         const Component = sectionComponents[section.type];
         return (
           <div key={section.type} className="card">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-base font-semibold text-gray-900">
+            <div className="mb-4 flex items-center justify-between border-b border-border pb-3">
+              <h2 className="text-base font-semibold text-default">
                 {tr.cvBuilder.sections[section.type]}
               </h2>
               <div className="flex gap-1">
@@ -152,19 +153,19 @@ export function CVBuilderFormPage() {
                   type="button"
                   disabled={index === 0}
                   onClick={() => reorderSections(section.type, 'up')}
-                  className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-muted hover:bg-surface-2 disabled:opacity-30"
                   aria-label={tr.common.moveUp}
                 >
-                  ↑
+                  <ChevronUp aria-hidden="true" className="h-4 w-4" />
                 </button>
                 <button
                   type="button"
                   disabled={index === orderedSections.length - 1}
                   onClick={() => reorderSections(section.type, 'down')}
-                  className="rounded-md border border-gray-200 px-2 py-1 text-xs text-gray-600 hover:bg-gray-50 disabled:opacity-30"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-muted hover:bg-surface-2 disabled:opacity-30"
                   aria-label={tr.common.moveDown}
                 >
-                  ↓
+                  <ChevronDown aria-hidden="true" className="h-4 w-4" />
                 </button>
               </div>
             </div>
@@ -182,14 +183,14 @@ export function CVBuilderFormPage() {
         <h2 className="label mb-2">{tr.cvBuilder.outputLanguage}</h2>
         <div className="flex gap-4">
           {outputLanguageOptions.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 text-sm text-gray-700">
+            <label key={opt.value} className="flex items-center gap-2 text-sm text-muted">
               <input
                 type="radio"
                 name="outputLanguage"
                 value={opt.value}
                 checked={outputLanguage === opt.value}
                 onChange={() => setOutputLanguage(opt.value)}
-                className="h-4 w-4 border-gray-300 text-primary-600 focus:ring-primary-500"
+                className="h-4 w-4 border-border text-primary-600 focus:ring-primary-500"
               />
               {opt.label}
             </label>
@@ -197,7 +198,7 @@ export function CVBuilderFormPage() {
         </div>
       </div>
 
-      <div className="fixed inset-x-0 bottom-0 border-t border-gray-200 bg-white p-4 shadow-lg lg:pl-64">
+      <div className="fixed inset-x-0 bottom-0 border-t border-border bg-surface/95 p-4 shadow-lg backdrop-blur-md lg:pl-64">
         <div className="mx-auto flex max-w-4xl justify-end gap-3">
           <Button variant="secondary" onClick={() => navigate('/cv/builder/sections')}>
             {tr.common.back}

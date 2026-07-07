@@ -38,7 +38,7 @@ function UploadCard({ documentType, title }: UploadCardProps) {
 
   return (
     <div className="card">
-      <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+      <h2 className="text-base font-semibold text-default">{title}</h2>
 
       <div
         role="button"
@@ -53,12 +53,14 @@ function UploadCard({ documentType, title }: UploadCardProps) {
         }}
         onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        className={`mt-3 flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed px-4 py-8 text-center transition-colors ${
-          isDragging ? 'border-primary-500 bg-primary-50' : 'border-gray-300 hover:border-primary-400'
+        className={`mt-3 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors ${
+          isDragging
+            ? 'border-primary-500 bg-primary-50 dark:bg-primary-500/10'
+            : 'border-border hover:border-primary-400'
         }`}
       >
-        <p className="text-sm font-medium text-gray-700">{tr.documents.dropzoneHint}</p>
-        <p className="mt-1 text-xs text-gray-500">{tr.documents.dropzoneFormats}</p>
+        <p className="text-sm font-medium text-muted">{tr.documents.dropzoneHint}</p>
+        <p className="mt-1 text-xs text-faint">{tr.documents.dropzoneFormats}</p>
         <input
           ref={inputRef}
           type="file"
@@ -73,12 +75,12 @@ function UploadCard({ documentType, title }: UploadCardProps) {
       </div>
 
       {isBusy && (
-        <div className="mt-4 flex items-center gap-3 rounded-lg bg-gray-50 px-3 py-2">
+        <div className="mt-4 flex items-center gap-3 rounded-xl bg-surface-2 px-3 py-2">
           <span
             className="h-4 w-4 animate-spin rounded-full border-2 border-primary-600 border-t-transparent"
             aria-hidden="true"
           />
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-muted">
             {uploadMutation.isPending
               ? tr.documents.uploading
               : status === 'queued'
@@ -89,11 +91,13 @@ function UploadCard({ documentType, title }: UploadCardProps) {
       )}
 
       {status === 'completed' && (
-        <p className="mt-4 text-sm font-medium text-green-700">{tr.documents.completed}</p>
+        <p className="mt-4 text-sm font-medium text-green-700 dark:text-green-400">
+          {tr.documents.completed}
+        </p>
       )}
 
       {status === 'failed' && (
-        <p className="mt-4 text-sm font-medium text-red-700">
+        <p className="mt-4 text-sm font-medium text-red-700 dark:text-red-400">
           {statusQuery.data?.error_message ?? tr.documents.failed}
         </p>
       )}
@@ -109,14 +113,14 @@ interface DocumentCardProps {
 
 function DocumentCard({ doc, onDelete, isDeleting }: DocumentCardProps) {
   return (
-    <div className="card">
+    <div className="card card-hover">
       <div className="flex items-center justify-between gap-2">
-        <span className="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700">
+        <span className="rounded-full bg-primary-50 px-2.5 py-0.5 text-xs font-medium text-primary-700 dark:bg-primary-500/15 dark:text-primary-300">
           {documentTypeLabel[doc.document_type]}
         </span>
         <div className="flex items-center gap-2">
           {doc.cv_score !== null && (
-            <span className="text-sm font-semibold text-gray-900">
+            <span className="text-sm font-semibold text-default">
               {tr.documents.cvScore}: {doc.cv_score}
             </span>
           )}
@@ -125,34 +129,34 @@ function DocumentCard({ doc, onDelete, isDeleting }: DocumentCardProps) {
             onClick={() => onDelete(doc.document_id)}
             disabled={isDeleting}
             aria-label={tr.documents.deleteDocument}
-            className="rounded-md px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-md px-2 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-400 dark:hover:bg-red-950/30"
           >
             {isDeleting ? tr.documents.deleting : tr.documents.deleteDocument}
           </button>
         </div>
       </div>
       {doc.cv_score_explanation && (
-        <p className="mt-2 text-sm text-gray-600">{doc.cv_score_explanation}</p>
+        <p className="mt-2 text-sm text-muted">{doc.cv_score_explanation}</p>
       )}
       {(doc.parsed_skills?.languages?.length > 0 ||
         doc.parsed_skills?.frameworks?.length > 0 ||
         doc.parsed_skills?.tools?.length > 0) && (
-        <div className="mt-3 space-y-1 text-sm text-gray-600">
+        <div className="mt-3 space-y-1 text-sm text-muted">
           {doc.parsed_skills.languages?.length > 0 && (
             <p>
-              <span className="font-medium text-gray-700">{tr.documents.languages}:</span>{' '}
+              <span className="font-medium text-default">{tr.documents.languages}:</span>{' '}
               {doc.parsed_skills.languages.join(', ')}
             </p>
           )}
           {doc.parsed_skills.frameworks?.length > 0 && (
             <p>
-              <span className="font-medium text-gray-700">{tr.documents.frameworks}:</span>{' '}
+              <span className="font-medium text-default">{tr.documents.frameworks}:</span>{' '}
               {doc.parsed_skills.frameworks.join(', ')}
             </p>
           )}
           {doc.parsed_skills.tools?.length > 0 && (
             <p>
-              <span className="font-medium text-gray-700">{tr.documents.tools}:</span>{' '}
+              <span className="font-medium text-default">{tr.documents.tools}:</span>{' '}
               {doc.parsed_skills.tools.join(', ')}
             </p>
           )}
@@ -202,8 +206,8 @@ export function DocumentUploadPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.documents.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.documents.subtitle}</p>
+        <h1 className="text-2xl font-semibold text-default">{tr.documents.title}</h1>
+        <p className="mt-1 text-sm text-faint">{tr.documents.subtitle}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -212,7 +216,7 @@ export function DocumentUploadPage() {
       </div>
 
       <div>
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">{tr.documents.uploadedDocumentsTitle}</h2>
+        <h2 className="mb-3 text-lg font-semibold text-default">{tr.documents.uploadedDocumentsTitle}</h2>
         {latestDocsQuery.isLoading && <Spinner label={tr.common.loading} />}
         {latestDocsQuery.data && latestDocsQuery.data.documents.length === 0 && (
           <EmptyState title={tr.documents.noDocuments} />

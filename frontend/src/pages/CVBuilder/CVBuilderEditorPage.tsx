@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { AlertTriangle } from 'lucide-react';
 import { downloadCvPdf, exportCVPdf, getCVDraft, updateCVDraft } from '@/api/cv';
 import { getApiErrorMessage } from '@/api/client';
 import { Spinner } from '@/components/ui/Spinner';
@@ -20,8 +21,8 @@ function autoResize(el: HTMLTextAreaElement | null) {
 function tabClass(active: boolean): string {
   return `px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
     active
-      ? 'border-primary-600 text-primary-700'
-      : 'border-transparent text-gray-500 hover:text-gray-700'
+      ? 'border-primary-600 text-primary-700 dark:text-primary-400'
+      : 'border-transparent text-faint hover:text-muted'
   }`;
 }
 
@@ -151,7 +152,9 @@ export function CVBuilderEditorPage() {
   async function handleDownloadPdf() {
     if (!draftId) return;
     if (savedLang && savedLang !== activeLang) {
-      toast(tr.cvBuilder.editorLanguageMismatchWarning, { icon: '⚠️' });
+      toast(tr.cvBuilder.editorLanguageMismatchWarning, {
+        icon: <AlertTriangle aria-hidden="true" className="h-4 w-4 text-amber-500" />,
+      });
     }
     setIsDownloading(true);
     try {
@@ -190,7 +193,7 @@ export function CVBuilderEditorPage() {
     return (
       <div className="mx-auto max-w-2xl">
         <Spinner label={tr.cvBuilder.editorGenerating} />
-        <p className="text-center text-sm text-gray-500">{tr.cvBuilder.editorGeneratingHint}</p>
+        <p className="text-center text-sm text-faint">{tr.cvBuilder.editorGeneratingHint}</p>
       </div>
     );
   }
@@ -200,7 +203,7 @@ export function CVBuilderEditorPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-4 pb-10">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.cvBuilder.editorTitle}</h1>
+        <h1 className="text-2xl font-semibold text-default">{tr.cvBuilder.editorTitle}</h1>
         <Button onClick={handleDownloadPdf} isLoading={isDownloading}>
           {isDownloading ? tr.cvBuilder.editorDownloading : tr.cvBuilder.editorDownloadPdf}
         </Button>
@@ -208,7 +211,7 @@ export function CVBuilderEditorPage() {
 
       {draft.output_language === 'both' && (
         <>
-          <div className="flex gap-2 border-b border-gray-200">
+          <div className="flex gap-2 border-b border-border">
             <button type="button" onClick={() => setActiveLang('tr')} className={tabClass(activeLang === 'tr')}>
               {tr.cvBuilder.editorTabTr}
             </button>
@@ -217,7 +220,7 @@ export function CVBuilderEditorPage() {
             </button>
           </div>
           {savedLang && (
-            <p className="text-xs text-amber-600">
+            <p className="text-xs text-amber-600 dark:text-amber-400">
               {tr.cvBuilder.editorBothLanguageNotice(languageLabel(savedLang))}
             </p>
           )}
@@ -229,7 +232,7 @@ export function CVBuilderEditorPage() {
           <label htmlFor="cv-editor-textarea" className="label mb-0">
             {tr.cvBuilder.editorTextareaLabel}
           </label>
-          <span className="text-xs text-gray-400" role="status">
+          <span className="text-xs text-faint" role="status">
             {updateMutation.isPending
               ? tr.cvBuilder.editorSaving
               : updateMutation.isSuccess
@@ -247,8 +250,8 @@ export function CVBuilderEditorPage() {
         />
       </div>
 
-      <p className="text-xs text-gray-400">
-        {tr.cvBuilder.editorDraftStatus} <span className="font-medium text-gray-600">{draft.status}</span>
+      <p className="text-xs text-faint">
+        {tr.cvBuilder.editorDraftStatus} <span className="font-medium text-muted">{draft.status}</span>
       </p>
     </div>
   );

@@ -3,6 +3,28 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import {
+  ArrowRight,
+  Award,
+  BadgeCheck,
+  BookMarked,
+  BookOpen,
+  Briefcase,
+  Building2,
+  CheckCircle2,
+  Circle,
+  FileCheck2,
+  FolderKanban,
+  GraduationCap,
+  Heart,
+  Languages,
+  Layers,
+  Star,
+  User,
+  Users,
+  Zap,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { useCVBuilderStore } from '@/store/cvBuilderStore';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -25,6 +47,23 @@ const sectionOrder: SectionType[] = [
   'declaration',
   'custom',
 ];
+
+const sectionIcons: Record<SectionType, LucideIcon> = {
+  education: GraduationCap,
+  experience: Briefcase,
+  skills: Zap,
+  languages: Languages,
+  certificates: BadgeCheck,
+  interests: Heart,
+  projects: FolderKanban,
+  courses: BookOpen,
+  awards: Award,
+  organisations: Building2,
+  publications: BookMarked,
+  references: Users,
+  declaration: FileCheck2,
+  custom: Star,
+};
 
 const personalSchema = z.object({
   name: z.string().min(1, tr.cvBuilder.fullNameRequired),
@@ -75,13 +114,18 @@ export function SectionSelectPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.cvBuilder.sectionSelectTitle}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.cvBuilder.sectionSelectSubtitle}</p>
+        <h1 className="text-2xl font-semibold text-default">{tr.cvBuilder.sectionSelectTitle}</h1>
+        <p className="mt-1 text-sm text-faint">{tr.cvBuilder.sectionSelectSubtitle}</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
         <div className="card space-y-4">
-          <h2 className="text-base font-semibold text-gray-900">{tr.cvBuilder.personalInfo}</h2>
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-400">
+              <User aria-hidden="true" className="h-5 w-5" />
+            </span>
+            <h2 className="text-base font-semibold text-default">{tr.cvBuilder.personalInfo}</h2>
+          </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Input
               label={tr.cvBuilder.fullName}
@@ -117,28 +161,55 @@ export function SectionSelectPage() {
           </div>
         </div>
 
-        <div className="card">
-          <h2 className="text-base font-semibold text-gray-900">{tr.cvBuilder.sectionsHeading}</h2>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {sectionOrder.map((type) => (
-              <label
-                key={type}
-                className="flex cursor-pointer items-center gap-3 rounded-lg border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-primary-300 hover:bg-primary-50/40"
-              >
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 rounded border-gray-300 text-primary-600 focus:ring-primary-500"
-                  checked={selectedSections.includes(type)}
-                  onChange={() => toggleSection(type)}
-                />
-                {tr.cvBuilder.sections[type]}
-              </label>
-            ))}
+        <div className="card space-y-4">
+          <div className="flex items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600 dark:bg-accent-500/15 dark:text-accent-400">
+              <Layers aria-hidden="true" className="h-5 w-5" />
+            </span>
+            <h2 className="text-base font-semibold text-default">{tr.cvBuilder.sectionsHeading}</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {sectionOrder.map((type) => {
+              const Icon = sectionIcons[type];
+              const selected = selectedSections.includes(type);
+              return (
+                <label
+                  key={type}
+                  className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
+                    selected
+                      ? 'border-primary-400 bg-primary-50 text-primary-700 dark:border-primary-500/60 dark:bg-primary-500/10 dark:text-primary-300'
+                      : 'border-border text-muted hover:border-primary-300 hover:bg-primary-50/40 dark:hover:bg-primary-500/10'
+                  }`}
+                >
+                  <span className="flex items-center gap-2.5">
+                    <Icon aria-hidden="true" className="h-4 w-4 shrink-0" />
+                    {tr.cvBuilder.sections[type]}
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={selected}
+                    onChange={() => toggleSection(type)}
+                  />
+                  {selected ? (
+                    <CheckCircle2
+                      aria-hidden="true"
+                      className="h-5 w-5 shrink-0 text-primary-600 dark:text-primary-400"
+                    />
+                  ) : (
+                    <Circle aria-hidden="true" className="h-5 w-5 shrink-0 text-faint" />
+                  )}
+                </label>
+              );
+            })}
           </div>
         </div>
 
         <div className="flex justify-end">
-          <Button type="submit">{tr.cvBuilder.continueToForm}</Button>
+          <Button type="submit" className="gap-2 !rounded-2xl !px-8 !py-3 font-bold">
+            {tr.cvBuilder.continueToForm}
+            <ArrowRight aria-hidden="true" className="h-4 w-4" />
+          </Button>
         </div>
       </form>
     </div>

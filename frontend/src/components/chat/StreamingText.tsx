@@ -10,7 +10,7 @@ export function StreamingText({ text, isStreaming }: StreamingTextProps) {
       {text}
       {isStreaming && (
         <span
-          className="ml-0.5 inline-block h-4 w-1.5 animate-pulse align-middle bg-current opacity-70"
+          className="ml-0.5 inline-block h-4 w-1.5 animate-pulse align-middle bg-accent-400 opacity-90"
           aria-hidden="true"
         />
       )}

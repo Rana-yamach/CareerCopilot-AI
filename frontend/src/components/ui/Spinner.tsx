@@ -16,7 +16,7 @@ export function Spinner({ label, size = 'md' }: SpinnerProps) {
         className={`animate-spin rounded-full border-primary-600 border-t-transparent ${sizeClass[size]}`}
         aria-hidden="true"
       />
-      {label && <p className="text-sm text-gray-600">{label}</p>}
+      {label && <p className="text-sm text-muted">{label}</p>}
     </div>
   );
 }

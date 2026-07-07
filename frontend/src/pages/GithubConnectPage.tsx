@@ -2,11 +2,11 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { AtSign, Info, Link2 } from 'lucide-react';
 import { connectGithub, syncGithub } from '@/api/github';
 import { getApiErrorMessage } from '@/api/client';
 import { useProfile } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { tr } from '@/i18n/tr';
 import type { ConnectGithubResponse } from '@/types/github';
 
@@ -55,24 +55,42 @@ export function GithubConnectPage() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.github.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.github.subtitle}</p>
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-default">{tr.github.title}</h1>
+        <p className="mx-auto mt-1 max-w-md text-sm text-muted">{tr.github.subtitle}</p>
       </div>
 
       <form onSubmit={handleConnect} className="card space-y-4">
-        <Input
-          label={tr.github.usernameLabel}
-          placeholder={tr.github.usernamePlaceholder}
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        {isConnected && <p className="text-xs text-gray-500">{tr.github.reconnectHint}</p>}
-        <div className="flex justify-end">
-          <Button type="submit" isLoading={connectMutation.isPending}>
-            {connectMutation.isPending ? tr.github.connecting : tr.github.connectButton}
-          </Button>
+        <div>
+          <label htmlFor="github-username" className="label">
+            {tr.github.usernameLabel}
+          </label>
+          <div className="relative">
+            <AtSign
+              aria-hidden="true"
+              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint"
+            />
+            <input
+              id="github-username"
+              type="text"
+              className="input-field pl-9"
+              placeholder={tr.github.usernamePlaceholder}
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </div>
         </div>
+        {isConnected && <p className="text-xs text-faint">{tr.github.reconnectHint}</p>}
+        <Button type="submit" isLoading={connectMutation.isPending} className="w-full gap-2">
+          {!connectMutation.isPending && <Link2 aria-hidden="true" className="h-4 w-4" />}
+          {connectMutation.isPending ? tr.github.connecting : tr.github.connectButton}
+        </Button>
+        {!isConnected && (
+          <p className="flex items-center justify-center gap-1.5 text-xs text-faint">
+            <Info aria-hidden="true" className="h-3.5 w-3.5 text-accent-500" />
+            {tr.github.notConnectedYet}
+          </p>
+        )}
       </form>
 
       {isConnected && (
@@ -82,17 +100,17 @@ export function GithubConnectPage() {
               <img
                 src={connected.avatar_url}
                 alt={displayUsername}
-                className="h-14 w-14 rounded-full border border-gray-200"
+                className="h-14 w-14 rounded-full border border-border"
               />
             )}
             <div>
-              <p className="text-sm text-gray-500">{tr.github.connectedAs}</p>
-              <p className="text-base font-semibold text-gray-900">{displayUsername}</p>
+              <p className="text-sm text-faint">{tr.github.connectedAs}</p>
+              <p className="text-base font-semibold text-default">{displayUsername}</p>
               {connected && (
-                <p className="mt-1 text-sm text-gray-500">
+                <p className="mt-1 text-sm text-faint">
                   {tr.github.publicRepos}: {connected.public_repos}
                   {connected.verified && (
-                    <span className="ml-2 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                    <span className="ml-2 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-950/30 dark:text-green-400">
                       {tr.github.verified}
                     </span>
                   )}
@@ -112,8 +130,8 @@ export function GithubConnectPage() {
 
           {syncMutation.data && (
             <div>
-              <h2 className="text-sm font-semibold text-gray-900">{tr.github.languagesTitle}</h2>
-              <p className="mb-2 text-xs text-gray-500">
+              <h2 className="text-sm font-semibold text-default">{tr.github.languagesTitle}</h2>
+              <p className="mb-2 text-xs text-faint">
                 {tr.github.lastSynced}{' '}
                 {new Date(syncMutation.data.synced_at).toLocaleString('tr-TR')}
               </p>
@@ -122,13 +140,13 @@ export function GithubConnectPage() {
                   .sort((a, b) => b[1] - a[1])
                   .map(([lang, pct]) => (
                     <div key={lang}>
-                      <div className="flex justify-between text-xs text-gray-600">
+                      <div className="flex justify-between text-xs text-muted">
                         <span>{lang}</span>
                         <span>%{pct.toFixed(1)}</span>
                       </div>
-                      <div className="mt-1 h-2 w-full rounded-full bg-gray-100">
+                      <div className="mt-1 h-2 w-full rounded-full bg-surface-2">
                         <div
-                          className="h-2 rounded-full bg-primary-600"
+                          className="h-2 rounded-full bg-gradient-to-r from-primary-500 to-accent-500"
                           style={{ width: `${Math.min(pct, 100)}%` }}
                         />
                       </div>
@@ -139,8 +157,6 @@ export function GithubConnectPage() {
           )}
         </div>
       )}
-
-      {!isConnected && <p className="text-sm text-gray-500">{tr.github.notConnectedYet}</p>}
     </div>
   );
 }

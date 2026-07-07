@@ -3,6 +3,7 @@ import type { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { BarChart3 } from 'lucide-react';
 import { analyzeSkillGap, getLatestSkillGap, getSkillGapReport } from '@/api/skillGap';
 import { getApiErrorMessage } from '@/api/client';
 import { Button } from '@/components/ui/Button';
@@ -13,30 +14,47 @@ import { EmptyState } from '@/components/ui/EmptyState';
 import { tr } from '@/i18n/tr';
 import type { MissingSkill } from '@/types/skillGap';
 
-const priorityColor: Record<number, string> = {
-  1: 'border-red-300 bg-red-50 text-red-700',
-  2: 'border-red-300 bg-red-50 text-red-700',
-  3: 'border-amber-300 bg-amber-50 text-amber-700',
-  4: 'border-green-300 bg-green-50 text-green-700',
-  5: 'border-green-300 bg-green-50 text-green-700',
+const priorityAccent: Record<number, { bar: string; badge: string }> = {
+  1: { bar: 'border-l-rose-500', badge: 'bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400' },
+  2: { bar: 'border-l-rose-500', badge: 'bg-rose-50 text-rose-700 dark:bg-rose-500/15 dark:text-rose-400' },
+  3: {
+    bar: 'border-l-accent-500',
+    badge: 'bg-accent-50 text-accent-700 dark:bg-accent-500/15 dark:text-accent-400',
+  },
+  4: {
+    bar: 'border-l-emerald-500',
+    badge: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+  },
+  5: {
+    bar: 'border-l-emerald-500',
+    badge: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-400',
+  },
 };
 
-function priorityClass(priority: number): string {
-  return priorityColor[priority] ?? priorityColor[3];
+function priorityClass(priority: number): { bar: string; badge: string } {
+  return priorityAccent[priority] ?? priorityAccent[3];
 }
 
+/**
+ * Uyum skoru halkası: `primary` -> `accent` konik gradient ile doldurulur,
+ * kalan kısım tema border rengiyle (açık/koyu duyarlı) çizilir.
+ */
 function MatchScoreGauge({ score }: { score: number }) {
   const clamped = Math.max(0, Math.min(100, score));
   return (
     <div
-      className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full"
-      style={{ background: `conic-gradient(#4f46e5 ${clamped * 3.6}deg, #e5e7eb 0deg)` }}
+      className="flex h-32 w-32 shrink-0 items-center justify-center rounded-full shadow-sm"
+      style={{
+        background: `conic-gradient(from 0deg, #1a56db 0%, #1a56db ${clamped}%, rgb(var(--color-border)) ${clamped}% 100%)`,
+      }}
       role="img"
       aria-label={`${tr.skillGap.matchScore}: %${clamped}`}
     >
-      <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-white">
-        <span className="text-2xl font-bold text-gray-900">%{clamped}</span>
-        <span className="text-xs text-gray-500">{tr.skillGap.matchScore}</span>
+      <div className="flex h-24 w-24 flex-col items-center justify-center rounded-full bg-surface">
+        <span className="text-2xl font-bold text-primary-600 dark:text-primary-400">
+          %{clamped}
+        </span>
+        <span className="text-xs text-faint">{tr.skillGap.matchScore}</span>
       </div>
     </div>
   );
@@ -44,8 +62,9 @@ function MatchScoreGauge({ score }: { score: number }) {
 
 function MissingSkillCard({ skill }: { skill: MissingSkill }) {
   const [expanded, setExpanded] = useState(false);
+  const accent = priorityClass(skill.priority);
   return (
-    <div className={`rounded-xl border p-4 ${priorityClass(skill.priority)}`}>
+    <div className={`rounded-xl border border-border border-l-4 bg-surface p-4 ${accent.bar}`}>
       <button
         type="button"
         onClick={() => setExpanded((value) => !value)}
@@ -53,22 +72,25 @@ function MissingSkillCard({ skill }: { skill: MissingSkill }) {
         aria-expanded={expanded}
       >
         <div>
-          <p className="font-semibold">{skill.name}</p>
-          <p className="text-xs opacity-80">
-            {tr.skillGap.priority} {skill.priority} · {tr.skillGap.estimatedWeeks(skill.estimated_weeks)}
+          <p className="font-semibold text-default">{skill.name}</p>
+          <p className="mt-1.5 flex flex-wrap items-center gap-2 text-xs">
+            <span className={`rounded-full px-2 py-0.5 font-medium ${accent.badge}`}>
+              {tr.skillGap.priority} {skill.priority}
+            </span>
+            <span className="text-faint">{tr.skillGap.estimatedWeeks(skill.estimated_weeks)}</span>
           </p>
         </div>
-        <span aria-hidden="true" className="text-lg leading-none">
+        <span aria-hidden="true" className="text-lg leading-none text-faint">
           {expanded ? '−' : '+'}
         </span>
       </button>
       {expanded && (
-        <div className="mt-3 space-y-2 border-t border-current/20 pt-3">
-          <p className="text-xs font-semibold uppercase tracking-wide opacity-80">
+        <div className="mt-3 space-y-2 border-t border-border pt-3">
+          <p className="text-xs font-semibold uppercase tracking-wide text-faint">
             {tr.skillGap.resourcesTitle}
           </p>
           {skill.resources.length === 0 ? (
-            <p className="text-sm opacity-80">{tr.skillGap.noResources}</p>
+            <p className="text-sm text-faint">{tr.skillGap.noResources}</p>
           ) : (
             <ul className="space-y-1 text-sm">
               {skill.resources.map((resource) => (
@@ -77,11 +99,11 @@ function MissingSkillCard({ skill }: { skill: MissingSkill }) {
                     href={resource.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="underline decoration-dotted hover:opacity-80"
+                    className="text-primary-600 underline decoration-dotted hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300"
                   >
                     {resource.title}
                   </a>{' '}
-                  <span className="text-xs opacity-70">({resource.type})</span>
+                  <span className="text-xs text-faint">({resource.type})</span>
                 </li>
               ))}
             </ul>
@@ -151,8 +173,8 @@ export function SkillGapPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-900">{tr.skillGap.title}</h1>
-        <p className="mt-1 text-sm text-gray-500">{tr.skillGap.subtitle}</p>
+        <h1 className="text-2xl font-semibold text-default">{tr.skillGap.title}</h1>
+        <p className="mt-1 text-sm text-faint">{tr.skillGap.subtitle}</p>
       </div>
 
       <form onSubmit={handleAnalyze} className="card flex flex-col gap-4 sm:flex-row sm:items-end">
@@ -164,7 +186,15 @@ export function SkillGapPage() {
             onChange={(event) => setTargetPosition(event.target.value)}
           />
         </div>
-        <Button type="submit" isLoading={analyzeMutation.isPending}>
+        <Button type="submit" isLoading={analyzeMutation.isPending} className="gap-2.5">
+          {!analyzeMutation.isPending && (
+            <span
+              aria-hidden="true"
+              className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-white/20"
+            >
+              <BarChart3 className="h-3.5 w-3.5" />
+            </span>
+          )}
           {analyzeMutation.isPending ? tr.skillGap.analyzing : tr.skillGap.analyzeButton}
         </Button>
       </form>
@@ -174,7 +204,7 @@ export function SkillGapPage() {
       {isProcessing && (
         <div className="card">
           <Spinner label={tr.skillGap.analyzing} />
-          <p className="text-center text-sm text-gray-500">{tr.skillGap.analyzingHint}</p>
+          <p className="text-center text-sm text-faint">{tr.skillGap.analyzingHint}</p>
         </div>
       )}
 
@@ -194,16 +224,16 @@ export function SkillGapPage() {
           <div className="card flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
             <MatchScoreGauge score={report.match_score} />
             <div className="flex-1 text-center sm:text-left">
-              <p className="text-sm text-gray-500">{tr.skillGap.lastAnalyzed}</p>
-              <p className="text-base font-medium text-gray-900">
+              <p className="text-sm text-faint">{tr.skillGap.lastAnalyzed}</p>
+              <p className="text-base font-medium text-default">
                 {new Date(report.generated_at).toLocaleString('tr-TR')}
               </p>
-              <p className="mt-2 text-sm text-gray-600">{report.target_position}</p>
+              <p className="mt-2 text-sm text-muted">{report.target_position}</p>
             </div>
           </div>
 
           <div>
-            <h2 className="mb-3 text-lg font-semibold text-gray-900">
+            <h2 className="mb-3 text-lg font-semibold text-default">
               {tr.skillGap.missingSkillsTitle}
             </h2>
             <div className="space-y-3">

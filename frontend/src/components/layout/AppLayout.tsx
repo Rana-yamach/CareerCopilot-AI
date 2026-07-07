@@ -11,7 +11,7 @@ export function AppLayout() {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
+    <div className="flex h-screen overflow-hidden bg-app">
       <Sidebar open={drawerOpen} onClose={() => setDrawerOpen(false)} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar onMenuClick={() => setDrawerOpen(true)} />

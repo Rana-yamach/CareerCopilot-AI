@@ -5,6 +5,29 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CareerCopilot AI</title>
+    <!--
+      Tema flash önleme: React yüklenmeden önce çalışır, `themeStore.ts` ile
+      aynı localStorage anahtarını (`theme-storage`) okuyup <html>'e `dark`
+      sınıfını senkron olarak ekler. Böylece koyu tema tercih edilmişken kısa
+      süreliğine açık tema "flaş"ı görülmez.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme-storage');
+          var theme = 'light';
+          if (stored) {
+            var parsed = JSON.parse(stored);
+            theme = (parsed && parsed.state && parsed.state.theme) || 'light';
+          }
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {
+          /* localStorage erişilemezse (ör. gizli sekme) açık tema ile devam et */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

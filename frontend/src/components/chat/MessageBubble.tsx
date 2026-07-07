@@ -24,12 +24,12 @@ export function MessageBubble({ role, content, agentUsed, isStreaming }: Message
       <div
         className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
           isUser
-            ? 'bg-primary-600 text-white'
-            : 'border border-gray-200 bg-white text-gray-800'
+            ? 'bg-primary-700 text-white shadow-primary-600/20'
+            : 'border border-border bg-surface-2 text-default'
         }`}
       >
         {!isUser && label && (
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary-600">
+          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-primary-600 dark:text-primary-400">
             {label}
           </p>
         )}

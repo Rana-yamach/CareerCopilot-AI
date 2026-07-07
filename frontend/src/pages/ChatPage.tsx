@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
+import { History, MessageSquarePlus, Plus, Send } from 'lucide-react';
 import { getChatSessions, getSessionMessages } from '@/api/chat';
 import { useSSE } from '@/hooks/useSSE';
 import { ChatWindow } from '@/components/chat/ChatWindow';
@@ -67,9 +68,8 @@ export function ChatPage() {
     setMessages([]);
   }
 
-  async function handleSend(event: FormEvent) {
-    event.preventDefault();
-    const trimmed = input.trim();
+  async function sendMessage(rawText: string) {
+    const trimmed = rawText.trim();
     if (!trimmed || sse.isStreaming) return;
 
     const userMessage: ChatMessageVM = { id: newId(), role: 'user', content: trimmed };
@@ -109,22 +109,55 @@ export function ChatPage() {
     );
   }
 
+  function handleSend(event: FormEvent) {
+    event.preventDefault();
+    void sendMessage(input);
+  }
+
   const sessions = sessionsQuery.data?.sessions ?? [];
 
   return (
     <div className="flex h-[calc(100vh-8rem)] flex-col gap-4 sm:flex-row">
       {/* Masaüstü oturum listesi */}
-      <aside className="hidden w-64 shrink-0 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white sm:flex">
-        <div className="flex items-center justify-between border-b border-gray-200 p-3">
-          <h2 className="text-sm font-semibold text-gray-900">{tr.chat.sessionsTitle}</h2>
-          <Button variant="secondary" className="!px-2 !py-1 text-xs" onClick={handleNewSession}>
-            {tr.chat.newSession}
-          </Button>
+      <aside className="hidden w-64 shrink-0 flex-col overflow-hidden rounded-xl border border-border bg-surface sm:flex">
+        <div className="flex items-center justify-between border-b border-border p-3">
+          <h2 className="text-sm font-semibold text-default">{tr.chat.sessionsTitle}</h2>
+          <button
+            type="button"
+            onClick={handleNewSession}
+            aria-label={tr.chat.newSession}
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary-700 text-white shadow-sm hover:bg-primary-800"
+          >
+            <Plus aria-hidden="true" className="h-4 w-4" />
+          </button>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
+          <button
+            type="button"
+            onClick={handleNewSession}
+            className="mb-2 flex w-full items-center gap-3 rounded-xl border border-primary-200 bg-primary-50/60 px-3 py-3 text-left transition-colors hover:bg-primary-50 dark:border-primary-500/30 dark:bg-primary-500/10 dark:hover:bg-primary-500/15"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-100 text-primary-600 dark:bg-primary-500/20 dark:text-primary-400">
+              <MessageSquarePlus aria-hidden="true" className="h-4 w-4" />
+            </span>
+            <span>
+              <span className="block text-sm font-semibold text-primary-700 dark:text-primary-300">
+                {tr.chat.newSessionCta}
+              </span>
+              <span className="block text-xs text-primary-600/80 dark:text-primary-400/80">
+                {tr.chat.newSessionCtaSubtitle}
+              </span>
+            </span>
+          </button>
+
           {sessionsQuery.isLoading && <Spinner size="sm" label={tr.common.loading} />}
           {!sessionsQuery.isLoading && sessions.length === 0 && (
-            <p className="p-2 text-sm text-gray-500">{tr.chat.noSessions}</p>
+            <div className="flex flex-col items-center gap-2 px-2 py-6 text-center">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-surface-2 text-faint">
+                <History aria-hidden="true" className="h-4 w-4" />
+              </span>
+              <p className="text-sm text-faint">{tr.chat.noSessions}</p>
+            </div>
           )}
           {sessions.map((session) => (
             <button
@@ -133,12 +166,12 @@ export function ChatPage() {
               onClick={() => handleSelectSession(session.session_id)}
               className={`mb-1 block w-full rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                 session.session_id === currentSessionId
-                  ? 'bg-primary-50 text-primary-700'
-                  : 'text-gray-600 hover:bg-gray-100'
+                  ? 'bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300'
+                  : 'text-muted hover:bg-surface-2'
               }`}
             >
               <p className="truncate font-medium">{session.last_message_preview}</p>
-              <p className="text-xs text-gray-400">{session.message_count} mesaj</p>
+              <p className="text-xs text-faint">{session.message_count} mesaj</p>
             </button>
           ))}
         </div>
@@ -165,25 +198,35 @@ export function ChatPage() {
         </Button>
       </div>
 
-      <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-gray-200 bg-white">
+      <div className="flex flex-1 flex-col overflow-hidden rounded-xl border border-border bg-surface">
         <ChatWindow
           messages={messages}
           streamingMessageId={streamingMessageId}
           isLoadingMessages={!!currentSessionId && messagesQuery.isLoading}
+          onSuggestionSelect={(text) => void sendMessage(text)}
         />
-        <form onSubmit={handleSend} className="flex items-center gap-2 border-t border-gray-200 p-3">
-          <input
-            type="text"
-            className="input-field"
-            placeholder={tr.chat.inputPlaceholder}
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            disabled={sse.isStreaming}
-          />
-          <Button type="submit" isLoading={sse.isStreaming} disabled={!input.trim()}>
-            {sse.isStreaming ? tr.chat.sending : tr.chat.send}
-          </Button>
-        </form>
+        <div className="border-t border-border p-3">
+          <form onSubmit={handleSend} className="flex items-center gap-2">
+            <input
+              type="text"
+              className="input-field"
+              placeholder={tr.chat.inputPlaceholder}
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+              disabled={sse.isStreaming}
+            />
+            <Button
+              type="submit"
+              isLoading={sse.isStreaming}
+              disabled={!input.trim()}
+              className="gap-1.5"
+            >
+              {sse.isStreaming ? tr.chat.sending : tr.chat.send}
+              {!sse.isStreaming && <Send aria-hidden="true" className="h-4 w-4" />}
+            </Button>
+          </form>
+          <p className="mt-2 text-center text-xs text-faint">{tr.chat.disclaimer}</p>
+        </div>
       </div>
     </div>
   );
