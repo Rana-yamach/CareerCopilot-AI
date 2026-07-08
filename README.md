@@ -89,18 +89,19 @@ Miro panomuzda işlerin türünü kolayca ayırt edebilmek için net bir renk ko
 - **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
 - **Sprint board update**: Sprint board screenshotları:
   <img width="966" height="875" alt="image" src="https://github.com/user-attachments/assets/85be2417-1934-4bb8-8e82-d22d469c8fff" />
+  
 - **Ürün Durumu**: Ekran görüntüleri:
-  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230452" src="https://github.com/user-attachments/assets/f9208faf-30cf-4549-9e55-cc1deed5550a" />
-  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230436" src="https://github.com/user-attachments/assets/f0fb8a95-2476-4234-89f3-6a3f57fa2b4c" />
-  <img width="1874" height="970" alt="Ekran görüntüsü 2026-07-03 230059" src="https://github.com/user-attachments/assets/9ec6454d-ffeb-410b-bdbf-9ad8018f1391" />
-  <img width="1875" height="969" alt="Ekran görüntüsü 2026-07-03 230146" src="https://github.com/user-attachments/assets/a5f33d00-c8aa-4e9a-9cb4-9341abcb1d1e" />
-  <img width="1875" height="971" alt="Ekran görüntüsü 2026-07-03 230212" src="https://github.com/user-attachments/assets/f2c50761-e1b1-4852-aff6-682d0b4d40ac" />
-  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230231" src="https://github.com/user-attachments/assets/6162f813-2c5c-467d-8320-e603bbce58c9" />
-  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-03 230255" src="https://github.com/user-attachments/assets/5c195d5d-0ce0-4058-9cc2-79583eded8f3" />
-  <img width="1877" height="969" alt="Ekran görüntüsü 2026-07-03 230321" src="https://github.com/user-attachments/assets/f691580f-bea5-49ce-a0db-627b52313594" />
-  <img width="1876" height="969" alt="Ekran görüntüsü 2026-07-03 230348" src="https://github.com/user-attachments/assets/6aee3d9d-74fc-45d7-82c6-3430a6298d36" />
-  <img width="1878" height="970" alt="Ekran görüntüsü 2026-07-03 230406" src="https://github.com/user-attachments/assets/884f0662-9bd3-4804-b13c-a5a0c03339bf" />
-    
+  <img width="1876" height="970" alt="Ekran görüntüsü 2026-07-08 194839" src="https://github.com/user-attachments/assets/d1f53019-4bc2-4249-a619-479eeab34c59" />
+  <img width="1875" height="969" alt="Ekran görüntüsü 2026-07-08 201409" src="https://github.com/user-attachments/assets/fc2d0d73-67d5-4fb6-840a-475a0af85c09" />
+  <img width="1877" height="967" alt="Ekran görüntüsü 2026-07-08 201011" src="https://github.com/user-attachments/assets/a346636a-d9b2-4e32-9fa5-195effac52fc" />
+  <img width="1877" height="969" alt="Ekran görüntüsü 2026-07-08 201033" src="https://github.com/user-attachments/assets/2818f91a-2496-4fd8-94f4-9e5a5a54b52f" />
+  <img width="1877" height="970" alt="Ekran görüntüsü 2026-07-08 201057" src="https://github.com/user-attachments/assets/cce04afc-f371-42fe-b0de-f2c346c4c90e" />
+  <img width="1843" height="969" alt="Ekran görüntüsü 2026-07-08 201129" src="https://github.com/user-attachments/assets/791d1482-6d74-4c93-b36e-fd0eb22e107c" />
+  <img width="1877" height="970" alt="Ekran görüntüsü 2026-07-08 201147" src="https://github.com/user-attachments/assets/9678674c-90c2-4335-b190-fd717ced73b4" />
+  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-08 201203" src="https://github.com/user-attachments/assets/7480a270-31f0-4783-89ea-4b5c0ea727e9" />
+  <img width="1877" height="967" alt="Ekran görüntüsü 2026-07-08 201217" src="https://github.com/user-attachments/assets/fd3c5818-8d2c-415e-9118-4b8b15e52ab5" />
+  <img width="1879" height="970" alt="Ekran görüntüsü 2026-07-08 201232" src="https://github.com/user-attachments/assets/92129c1d-06e5-4bb9-a53b-8f0a6e249ebb" />
+
 - **Sprint Review**:
   
 Bu sprintte CareerAI projesinin temel kullanıcı arayüzü başarıyla geliştirildi. Kullanıcının kariyer gelişim sürecini tek platform üzerinden yönetebilmesi amacıyla Dashboard, CV yükleme, CV düzenleme, GitHub entegrasyonu, beceri boşluğu analizi, kariyer yol haritası, mülakat simülasyonu ve AI sohbet ekranları tasarlanıp çalışır hale getirildi. 
