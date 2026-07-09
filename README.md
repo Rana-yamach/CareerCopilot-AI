@@ -1,147 +1,285 @@
-# **Takım İsmi**
+# Takım İsmi
 
-Takım 82
+**Takım 82**
 
-# Ürün İle İlgili Bilgiler
+---
 
-## Takım Elemanları
+# Ürün ile İlgili Bilgiler
 
-- Ömer Faruk Yelman: Product Owner
-- Hatice Rana Yamaç: Scrum Master
-- Emir Selengil: Team Member/Developer
-- Beyza Nur Çelik: Team Member/Developer
-- Büşra Arslan: Team Member/Developer
+## Takım Elemanları ve Rolleri
+
+| İsim | Rol |
+|---|---|
+| Ömer Faruk Yelman | Product Owner |
+| Hatice Rana Yamaç | Scrum Master |
+| Emir Selengil | Team Member / Developer |
+| Beyza Nur Çelik | Team Member / Developer |
+| Büşra Arslan | Team Member / Developer |
 
 ## Ürün İsmi
 
---CareerAI--
+**CareerAI**
 
 ## Ürün Açıklaması
 
-CareerAI, öğrencilerin ve yeni mezunların kariyer hedeflerine ulaşmalarını kolaylaştırmak amacıyla geliştirilen yapay zekâ destekli bir kariyer danışmanlığı platformudur. Kullanıcılar CV'lerini sisteme yükleyebilir, GitHub ve LinkedIn hesaplarını bağlayabilir. Yapay zekâ bu verileri analiz ederek mevcut yetkinlikleri değerlendirir, eksik becerileri belirler ve kullanıcıya kişiselleştirilmiş bir kariyer gelişim planı sunar. 
+CareerAI, öğrencilerin ve yeni mezunların kariyer hedeflerine ulaşmalarını kolaylaştırmak amacıyla geliştirilen yapay zekâ destekli bir kariyer danışmanlığı platformudur.
 
-Sistem, yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık çalışma planı oluşturur, teknik mülakat simülasyonları gerçekleştirir ve kullanıcının hedeflediği pozisyona ulaşması için izlemesi gereken yol haritasını önerir. Çoklu AI Agent mimarisi sayesinde her analiz alanı kendi uzman ajanı tarafından gerçekleştirilerek daha doğru ve kapsamlı sonuçlar elde edilir. 
+Kullanıcılar CV'lerini sisteme yükleyebilir, GitHub ve LinkedIn hesaplarını bağlayabilir. Yapay zekâ bu verileri analiz ederek kullanıcının mevcut yetkinliklerini değerlendirir, eksik becerilerini belirler ve hedeflediği pozisyona ulaşması için kişiselleştirilmiş bir kariyer gelişim planı sunar.
+
+Sistem yalnızca eksik yönleri göstermekle kalmaz; aynı zamanda haftalık çalışma planı oluşturur, teknik mülakat simülasyonları gerçekleştirir ve kullanıcıya hedeflediği kariyer yolunda takip edebileceği bir roadmap önerir. Çoklu AI Agent mimarisi sayesinde CV analizi, skill gap analizi, roadmap oluşturma ve mülakat simülasyonu gibi süreçler ayrı uzman ajanlar tarafından yürütülerek daha kapsamlı ve kişiselleştirilmiş sonuçlar elde edilmesi hedeflenmektedir.
 
 ## Ürün Özellikleri
 
--CV yükleme ve otomatik analiz  
--GitHub hesabı entegrasyonu  
--LinkedIn profil entegrasyonu  
--Yapay zekâ ile beceri (Skill Gap) analizi  
--Kişiselleştirilmiş kariyer yol haritası oluşturma  
--Haftalık çalışma planı hazırlama  
--AI destekli teknik mülakat simülasyonu  
--AI sohbet asistanı ile kariyer danışmanlığı  
--Dashboard üzerinden kariyer gelişiminin takip edilmesi  
--Çoklu AI Agent mimarisi  
-  -CV Agent  
-  -Skill Gap Agent  
-  -Roadmap Agent  
-  -Interview Agent  
--Kullanıcının hedeflediği şirkete veya pozisyona göre öneriler sunma  
--İlerleme ve gelişim takibi 
+- CV yükleme ve otomatik analiz
+- CV bilgilerini düzenleme
+- GitHub hesabı entegrasyonu
+- LinkedIn profil entegrasyonu
+- Yapay zekâ ile beceri eksikliği analizi
+- Kişiselleştirilmiş kariyer yol haritası oluşturma
+- Haftalık çalışma planı hazırlama
+- AI destekli teknik mülakat simülasyonu
+- AI sohbet asistanı ile kariyer danışmanlığı
+- Dashboard üzerinden kariyer gelişiminin takip edilmesi
+- Çoklu AI Agent mimarisi
+  - CV Agent
+  - Skill Gap Agent
+  - Roadmap Agent
+  - Interview Agent
+- Kullanıcının hedeflediği şirkete veya pozisyona göre öneriler sunma
+- İlerleme ve gelişim takibi
 
 ## Hedef Kitle
 
--Üniversite öğrencileri  
--Yeni mezun yazılım geliştiriciler  
--Staj arayan öğrenciler  
--Junior seviyedeki yazılım mühendisleri  
--Kariyer değişikliği yapmak isteyen bireyler  
--Teknik mülakatlara hazırlanan adaylar  
--Yazılım alanında kendini geliştirmek isteyen kişiler 
+- Üniversite öğrencileri
+- Yeni mezun yazılım geliştiriciler
+- Staj arayan öğrenciler
+- Junior seviyedeki yazılım mühendisleri
+- Kariyer değişikliği yapmak isteyen bireyler
+- Teknik mülakatlara hazırlanan adaylar
+- Yazılım alanında kendini geliştirmek isteyen kişiler
+
+---
+
+# Product Backlog
+
+Product backlog, CareerAI platformunun temel kullanıcı akışını ve yapay zekâ destekli analiz süreçlerini kapsayacak şekilde hazırlanmıştır.
+
+Backlog oluşturulurken önceliklendirme şu kriterlere göre yapılmıştır:
+
+- Kullanıcının ürünü ilk kez deneyimleyebilmesi için gerekli temel ekranlar
+- CV yükleme ve analiz akışının oluşturulması
+- Kullanıcının mevcut yetkinliklerini ve eksik becerilerini görebilmesi
+- Kariyer yol haritası ve mülakat simülasyonu gibi ürünün ana değer önerisini gösteren özellikler
+- Backend ve gerçek AI entegrasyonlarına temel oluşturacak frontend yapısının hazırlanması
 
 ## Product Backlog URL
 
-[Miro Backlog Board](https://miro.com/app/board/uXjVHHXhof0=/)
+[Miro Product Backlog Board](https://miro.com/app/board/uXjVHHXhof0=/)
+
+---
 
 # Sprint 1
 
+## Sprint Notları
+
+Sprint 1 kapsamında CareerAI projesinin temel kullanıcı arayüzünün oluşturulması ve kullanıcının platformdaki ana akışları deneyimleyebilmesi hedeflenmiştir. Bu sprintte öncelik, backend ve gerçek yapay zekâ entegrasyonlarından önce ürünün temel frontend iskeletini ve kullanıcı deneyimini ortaya çıkarmak olmuştur.
+
+## Sprint İçinde Tamamlanması Hedeflenen Puan
+
+**Sprint hedef puanı:** 100 puan
+
+Sprint 1 için seçilen işler, ürünün ilk kullanılabilir prototipini ortaya çıkaracak şekilde belirlenmiştir. Story point dağılımı, işlerin kapsamı ve geliştirme zorluğu dikkate alınarak yapılmıştır.
+
+| Backlog Item | Açıklama | Story Point | Durum |
+|---|---|---:|---|
+| Kullanıcı kayıt ve giriş ekranları | Kullanıcının sisteme kayıt olup giriş yapabilmesi | 10 | Tamamlandı |
+| Dashboard ekranı | Kullanıcının kariyer gelişimini genel olarak takip edebilmesi | 15 | Tamamlandı |
+| CV yükleme ekranı | Kullanıcının CV dosyasını sisteme yükleyebilmesi | 10 | Tamamlandı |
+| CV düzenleme ekranı | Kullanıcının CV bilgilerinde düzenleme yapabilmesi | 10 | Tamamlandı |
+| GitHub entegrasyon ekranı | Kullanıcının GitHub hesabını bağlayabileceği arayüzün hazırlanması | 10 | Tamamlandı |
+| Skill Gap Analysis ekranı | Kullanıcının eksik becerilerini görüntüleyebileceği analiz ekranı | 15 | Tamamlandı |
+| Career Roadmap ekranı | Kullanıcıya kariyer yol haritası sunan ekranın hazırlanması | 15 | Tamamlandı |
+| Interview Simulation ekranı | Teknik mülakat simülasyonu için temel ekranın hazırlanması | 10 | Tamamlandı |
+| AI Chat ekranı | Kariyer danışmanlığı için AI sohbet ekranının hazırlanması | 5 | Tamamlandı |
+
+**Tamamlanan puan:** 100 / 100
+
+> Not: Backend servisleri, gerçek AI Agent entegrasyonları, LinkedIn API bağlantısı ve gerçek zamanlı veri işleme süreçleri sonraki sprintlere bırakılmıştır.
+
+## Backlog Düzeni ve Story Seçimleri
+
+Product backlog, ürünün temel değer önerisini en kısa sürede görünür hâle getirecek şekilde düzenlenmiştir. İlk sprintte özellikle kullanıcının sisteme giriş yapması, CV yüklemesi, beceri analizini görüntülemesi, kariyer yol haritasını incelemesi ve mülakat simülasyonu başlatabilmesi gibi temel kullanıcı senaryoları seçilmiştir.
+
+Sprint 1 için seçilen story'ler aşağıdaki gerekçelere göre belirlenmiştir:
+
+- Ürünün temel kullanıcı yolculuğunu gösterecek ekranların öncelikli olması
+- Akademi değerlendirmesinde ürün fikrinin somut olarak anlaşılmasını sağlayacak arayüzlerin hazırlanması
+- Sonraki sprintlerde backend ve AI servislerinin bağlanabileceği modüler bir frontend yapısının oluşturulması
+- Kullanıcı deneyiminin erken aşamada test edilebilir hâle getirilmesi
+- CV, skill gap, roadmap ve interview gibi ürünün ana modüllerinin ilk prototiplerinin çıkarılması
+
+Sprint board üzerinde işler genel olarak aşağıdaki akışa göre takip edilmiştir:
+
+- **Backlog:** Henüz sprint içine alınmamış veya detaylandırılması gereken işler
+- **To Do:** Sprint 1 kapsamında yapılması planlanan işler
+- **In Progress:** Geliştirme süreci devam eden işler
+- **Review / Test:** Kontrol ve düzenleme aşamasındaki işler
+- **Done:** Tamamlanan işler
+
+## Daily Scrum
+
+Daily Scrum toplantıları takım üyelerinin ilerleme durumunu paylaşması, karşılaşılan problemleri belirtmesi ve bir sonraki adımların belirlenmesi amacıyla gerçekleştirilmiştir.
+
+Toplantılarda genel olarak şu sorular üzerinden ilerlenmiştir:
+
+- Dün ne yaptım?
+- Bugün ne yapacağım?
+- Önümde bir engel var mı?
+- Sprint hedefini etkileyen bir gecikme veya risk var mı?
+
+Daily Scrum toplantı çıktıları PDF olarak README içerisinde paylaşılmıştır:
+
+[Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
+
+## Sprint Board Screenshots
+
+Sprint board ekran görüntüleri aşağıdaki alana eklenmelidir.
+
+> Görselleri repo içinde `docs/sprint1/` klasörüne ekledikten sonra aşağıdaki dosya adlarını aynı şekilde kullanabilirsiniz.
+
+### Sprint Board - Başlangıç
+
+![Sprint Board Başlangıç](docs/sprint1/sprint-board-baslangic.png)
+
+### Sprint Board - Geliştirme Süreci
+
+![Sprint Board Geliştirme Süreci](docs/sprint1/sprint-board-gelisim.png)
+
+### Sprint Board - Sprint Sonu
+
+![Sprint Board Sprint Sonu](docs/sprint1/sprint-board-son.png)
+
+## Ürün Durumu: Ekran Görüntüleri
+
+Sprint 1 sonunda CareerAI projesinin temel frontend ekranları hazırlanmıştır. Ürün ekran görüntüleri aşağıdaki bölümlerde paylaşılmalıdır.
+
+> Görselleri repo içinde `docs/sprint1/product-screens/` klasörüne ekledikten sonra aşağıdaki dosya adlarını aynı şekilde kullanabilirsiniz.
+
+### Login / Register Ekranı
+
+![Login Register](docs/sprint1/product-screens/login-register.png)
+
+### Dashboard Ekranı
+
+![Dashboard](docs/sprint1/product-screens/dashboard.png)
+
+### CV Yükleme Ekranı
+
+![CV Upload](docs/sprint1/product-screens/cv-upload.png)
+
+### CV Düzenleme Ekranı
+
+![CV Edit](docs/sprint1/product-screens/cv-edit.png)
+
+### GitHub Entegrasyon Ekranı
+
+![GitHub Integration](docs/sprint1/product-screens/github-integration.png)
+
+### Skill Gap Analysis Ekranı
+
+![Skill Gap Analysis](docs/sprint1/product-screens/skill-gap-analysis.png)
+
+### Career Roadmap Ekranı
+
+![Career Roadmap](docs/sprint1/product-screens/career-roadmap.png)
+
+### Interview Simulation Ekranı
+
+![Interview Simulation](docs/sprint1/product-screens/interview-simulation.png)
+
+### AI Chat Ekranı
+
+![AI Chat](docs/sprint1/product-screens/ai-chat.png)
+
+## Sprint Review
+
+Sprint 1 sonunda CareerAI projesinin temel kullanıcı arayüzü büyük ölçüde tamamlanmıştır. Kullanıcının kariyer gelişim sürecini tek platform üzerinden yönetebilmesi amacıyla Dashboard, CV yükleme, CV düzenleme, GitHub entegrasyonu, beceri boşluğu analizi, kariyer yol haritası, mülakat simülasyonu ve AI sohbet ekranları tasarlanmıştır.
+
+Sprint sonunda kullanıcı aşağıdaki işlemleri yapabilecek temel arayüzlere sahip olmuştur:
+
+- Sisteme kayıt olabilmekte ve giriş yapabilmektedir.
+- CV dosyasını sisteme yükleyebilmektedir.
+- CV bilgilerinde düzenleme yapabilmektedir.
+- GitHub hesabını sisteme bağlayabileceği arayüzü görüntüleyebilmektedir.
+- Beceri boşluğu analizini görüntüleyebilmektedir.
+- AI tarafından oluşturulacak kariyer yol haritası için hazırlanan ekranı inceleyebilmektedir.
+- AI destekli mülakat simülasyonu için hazırlanan ekranı kullanabilmektedir.
+- AI Chat ekranı üzerinden kariyer danışmanlığı alabileceği arayüze erişebilmektedir.
+
+Bu sprintte ürünün frontend tarafındaki temel kullanıcı deneyimi oluşturulmuştur. Backend servisleri, gerçek AI Agent yapısı, LinkedIn entegrasyonu ve gerçek zamanlı analizlerin entegrasyonu sonraki sprintlere bırakılmıştır.
+
+## Sprint Retrospective
+
+### Neler İyi Gitti?
+
+- Uygulamanın temel sayfaları planlanan süre içerisinde tamamlandı.
+- Tüm ekranlarda ortak ve tutarlı bir kullanıcı arayüzü oluşturuldu.
+- Kullanıcı akışı Login / Register → Dashboard → CV Analysis → Skill Gap → Roadmap → Interview → AI Chat şeklinde başarıyla tasarlandı.
+- Modüler sayfa yapısı sayesinde ileride backend entegrasyonunun daha kolay yapılabileceği bir temel oluşturuldu.
+- Takım içi görev paylaşımı sprint sürecinin daha düzenli ilerlemesine katkı sağladı.
+
+### Karşılaşılan Zorluklar
+
+- AI servisleri henüz backend ile entegre edilmediği için bazı ekranlarda örnek/mock veriler kullanıldı.
+- Sayfalar arası veri aktarımı ve kullanıcı akışının düzenlenmesi planlanandan daha fazla zaman aldı.
+- CV ve GitHub entegrasyonlarının gerçek API bağlantıları sonraki sprintlere bırakıldı.
+- LinkedIn entegrasyonu için API erişimi ve veri çekme süreci ayrıca araştırılması gereken bir konu olarak belirlendi.
+
+### Gelecek Sprintte Yapılacaklar
+
+- Backend API entegrasyonlarının tamamlanması
+- Çoklu AI Agent mimarisinin geliştirilmesi
+  - CV Agent
+  - Skill Gap Agent
+  - Roadmap Agent
+  - Interview Agent
+- LinkedIn entegrasyonunun eklenmesi
+- GitHub üzerinden gerçek veri çekme sürecinin geliştirilmesi
+- AI analizlerinin gerçek LLM servisleriyle çalıştırılması
+- CV dosyası üzerinden veri çıkarma ve analiz sürecinin geliştirilmesi
+- Son kullanıcı testleri ve performans optimizasyonlarının yapılması
+
+## Sprint 1 Genel Değerlendirme
+
+Sprint 1 sonunda CareerAI projesinin kullanıcı arayüzü büyük ölçüde tamamlanmış ve ürünün temel kullanıcı deneyimi ortaya çıkarılmıştır. Bir sonraki sprintte sistemin yapay zekâ destekli karar mekanizmaları, backend bağlantıları ve veri işleme süreçlerinin geliştirilmesine odaklanılacaktır.
 
 ---
 
-- **📋 Backlog Düzeni ve Story Seçimleri (Backlog Design & Story Selection)**
+# Kullanılan Teknolojiler
 
-CareerCopilot AI projemizin geliştirme sürecinde şeffaflığı, planlamayı ve izlenebilirliği en üst düzeyde tutmak amacıyla Miro Board üzerinde çevik (**Scrum**) prensiplere dayalı profesyonel bir backlog yapısı kurgulanmıştır. Backlog düzenimiz ve sprint seçim stratejimiz şu kurallar çerçevesinde şekillendirilmiştir:
+> Bu bölümü projenizde gerçekten kullanılan teknolojilere göre güncelleyiniz.
 
-**Öncelik Esaslı Sıralama:** Backlog'umuz, kullanıcıya en hızlı şekilde değer yaratacak ve projenin teknik temelini oluşturacak ilk yapılacak story'lere (kullanıcı hikayelerine) göre yukarıdan aşağıya doğru sıralanmıştır. Geliştirme sırası bu öncelik hiyerarşisine göre belirlenmektedir.
-**Sprint Limitine Uyum:** Sprint planlama toplantılarında, sprint başına tahmin edilen *story point (SP)* kapasitesini aşmayacak şekilde sırasıyla en üstteki işler seçilerek sprint içerisine dahil edilmiştir.
-**Risk ve Kapsam Yönetimi:** Büyük iş parçalarının geliştirme sürecini tıkamasını (blocker) önlemek amacıyla, story başına düşen tahmin puanı projenin toplam puan bütçesinin (100 SP) yarısından (50 SP'den) daima çok daha az tutulmuştur. Böylece projenin sürdürülebilirliği güvence altına alınmıştır.
-
-**Görsel Kart Yapısı (Miro Legend)**
-
-Miro panomuzda işlerin türünü kolayca ayırt edebilmek için net bir renk kodlaması uygulanmıştır:
-
-| Renk | Kategori | Açıklama |
-| --- | --- | --- |
-| 🔵 | **User Stories** | Sistemin kullanıcıya katacağı değeri ve kabul kriterlerini içeren ana fonksiyonel modüllerdir. |
-| 🔴 | **Technical Tasks** | Kullanıcı hikayelerini hayata geçirmek için gereken teknik alt görevler (veritabanı şeması, API, test vb.). |
-
-> **Not:** Her bir mavi *story*, kendi altında ilişkili kırmızı *task*'lere bölünmüştür.
+- Frontend: React / Next.js / HTML / CSS / JavaScript
+- Backend: Planlanıyor
+- AI Servisleri: Planlanıyor
+- Tasarım ve Backlog: Miro
+- Versiyon Kontrol: Git & GitHub
 
 ---
 
-**📊 Sprint 1 İtibarıyla Story Point Özeti**
+# Kurulum ve Çalıştırma
 
-**Toplam Proje Puanı:** 100 SP
-**Sprint 1 Planlanan / Tamamlanan:** 15 SP / 15 SP (**İlerleme: %100**)
-**En Büyük Story Puanı:** 5 SP (Toplam puanın %5'i seviyesinde tutularak risk minimize edilmiştir).
-- **Daily Scrum**: Daily Scrum toplantısı çıktıları word olarak Readme'de tarafımızdan paylaşılmaktadır: [Grup82-Sprint1-DailyScrums.pdf](https://github.com/user-attachments/files/29664169/Grup82-Sprint1-DailyScrums.pdf)
-- **Sprint board update**: Sprint board screenshotları:
-  <img width="966" height="875" alt="image" src="https://github.com/user-attachments/assets/85be2417-1934-4bb8-8e82-d22d469c8fff" />
-  
-- **Ürün Durumu**: Ekran görüntüleri:
-  <img width="1876" height="970" alt="Ekran görüntüsü 2026-07-08 194839" src="https://github.com/user-attachments/assets/d1f53019-4bc2-4249-a619-479eeab34c59" />
-  <img width="1875" height="969" alt="Ekran görüntüsü 2026-07-08 201409" src="https://github.com/user-attachments/assets/fc2d0d73-67d5-4fb6-840a-475a0af85c09" />
-  <img width="1877" height="967" alt="Ekran görüntüsü 2026-07-08 201011" src="https://github.com/user-attachments/assets/a346636a-d9b2-4e32-9fa5-195effac52fc" />
-  <img width="1877" height="969" alt="Ekran görüntüsü 2026-07-08 201033" src="https://github.com/user-attachments/assets/2818f91a-2496-4fd8-94f4-9e5a5a54b52f" />
-  <img width="1877" height="970" alt="Ekran görüntüsü 2026-07-08 201057" src="https://github.com/user-attachments/assets/cce04afc-f371-42fe-b0de-f2c346c4c90e" />
-  <img width="1843" height="969" alt="Ekran görüntüsü 2026-07-08 201129" src="https://github.com/user-attachments/assets/791d1482-6d74-4c93-b36e-fd0eb22e107c" />
-  <img width="1877" height="970" alt="Ekran görüntüsü 2026-07-08 201147" src="https://github.com/user-attachments/assets/9678674c-90c2-4335-b190-fd717ced73b4" />
-  <img width="1876" height="968" alt="Ekran görüntüsü 2026-07-08 201203" src="https://github.com/user-attachments/assets/7480a270-31f0-4783-89ea-4b5c0ea727e9" />
-  <img width="1877" height="967" alt="Ekran görüntüsü 2026-07-08 201217" src="https://github.com/user-attachments/assets/fd3c5818-8d2c-415e-9118-4b8b15e52ab5" />
-  <img width="1879" height="970" alt="Ekran görüntüsü 2026-07-08 201232" src="https://github.com/user-attachments/assets/92129c1d-06e5-4bb9-a53b-8f0a6e249ebb" />
+> Proje dosyaları repoya eklendikten sonra bu bölüm güncellenmelidir.
 
-- **Sprint Review**:
-  
-Bu sprintte CareerAI projesinin temel kullanıcı arayüzü başarıyla geliştirildi. Kullanıcının kariyer gelişim sürecini tek platform üzerinden yönetebilmesi amacıyla Dashboard, CV yükleme, CV düzenleme, GitHub entegrasyonu, beceri boşluğu analizi, kariyer yol haritası, mülakat simülasyonu ve AI sohbet ekranları tasarlanıp çalışır hale getirildi. 
-
-Sprint sonunda kullanıcı; 
-
--Sisteme kayıt olabilmekte ve giriş yapabilmektedir.  
--CV dosyasını sisteme yükleyebilmektedir.  
--CV bilgilerinde düzenleme yapabilmektedir.  
--GitHub hesabını sisteme bağlayabilmektedir.  
--Beceri boşluğu analizini görüntüleyebilmektedir.  
--AI tarafından oluşturulan kariyer yol haritasını inceleyebilmektedir.  
--AI destekli mülakat simülasyonu başlatabilmektedir.  
--AI Chat ekranı üzerinden kariyer tavsiyesi alabilmektedir.  
-
-Sprint hedefleri büyük ölçüde gerçekleştirilmiş olup frontend tarafındaki temel kullanıcı deneyimi tamamlanmıştır. Sonraki sprintte backend servisleri, çoklu AI Agent yapısı ve gerçek zamanlı analizlerin entegrasyonu planlanmaktadır.
-
-- **Sprint Retrospective:**
-  
-Neler iyi gitti? 
-
--Uygulamanın temel sayfaları planlanan süre içerisinde tamamlandı.  
--Tüm ekranlarda ortak ve tutarlı bir kullanıcı arayüzü oluşturuldu.  
--Kullanıcı akışı (Login → Dashboard → Analiz → Roadmap → Interview) başarıyla tasarlandı.  
--Modüler sayfa yapısı sayesinde ileride backend entegrasyonu kolaylaştırıldı.  
-
-Karşılaşılan Zorluklar 
-
--AI servisleri henüz backend ile entegre edilmediği için bazı ekranlarda örnek (mock) veriler kullanıldı.  
--Sayfalar arasında veri aktarımı planlanandan daha fazla zaman aldı.  
--CV ve GitHub entegrasyonlarının gerçek API bağlantıları sonraki sprintlere bırakıldı.  
-
-Gelecek Sprintte Yapılacaklar 
-
--Backend API entegrasyonlarının tamamlanması.  
--Çoklu AI Agent mimarisinin geliştirilmesi (CV Agent, Skill Gap Agent, Roadmap Agent ve Interview Agent).  
--LinkedIn entegrasyonunun eklenmesi.  
--AI analizlerinin gerçek LLM servisleriyle çalıştırılması.  
--Son kullanıcı testleri ve performans optimizasyonlarının yapılması.  
-
-Bu sprint sonunda CareerAI projesinin kullanıcı arayüzü büyük ölçüde tamamlanmış olup, bir sonraki sprintte sistemin yapay zekâ destekli karar mekanizmaları ve veri işleme süreçlerinin geliştirilmesine odaklanılacaktır.
+```bash
+git clone https://github.com/Rana-yamach/CareerCopilot-AI.git
+cd CareerCopilot-AI
+npm install
+npm run dev
+```
 
 ---
+
+# Lisans
+
+Bu proje MIT lisansı ile lisanslanmıştır.
