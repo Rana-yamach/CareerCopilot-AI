@@ -255,6 +255,110 @@ Sprint 1 sonunda CareerAI projesinin kullanıcı arayüzü büyük ölçüde tam
 
 ---
 
+## Sprint 2
+
+### Backlog Düzeni ve Story Seçimleri
+Sprint 2 (6 Temmuz 2026 - 19 Temmuz 2026) geliştirme planlamamız, projenin en kritik anlamsal ve fonksiyonel bileşenlerini ayağa kaldırmak amacıyla **70 Story Point (SP)** olarak hedeflenmiştir. Sprint 2 kapsamında backlog yapımız ve story seçim süreçlerimiz şu şekilde yürütülmüştür:
+
+*   **Çevik Planlama (Agile Selection):** Kullanıcının doğrudan değer alacağı 5 ana modül (CV Analizi, CV Writer, Skill Gap, Roadmap ve Interview) önceliklendirilmiştir. 
+*   **Stratejik Pivot ve Limit Yönetimi (Rejected Stories):** İnce ayar (fine-tuning) için planlanan veri setinin sayısal/niteliksel kısıtları nedeniyle, jüriye en kararlı ve bütçe dostu performansı sunabilmek adına fine-tuning süreci (15 SP) iptal edilmiştir. Bunun yerine, açık kaynaklı **Mistral-7B Base modeli** gelişmiş sistem prompt'ları ve **Neon pgvector tabanlı RAG (Retrieval-Augmented Generation) pipeline'ı** ile orkestre edilmiştir. Bu pivot sayesinde 15 SP değerindeki iş paketi **"Rejected" (Reddedilenler)** sütununa aktarılmış ve proje kaynakları RAG veritabanı zenginleştirmesine kaydırılmıştır.
+*   **Tamamlanma Oranı (SP Analizi):** Planlanan 55 SP değerindeki ana geliştirme işlerinin **44 SP'si (4 Büyük User Story)** backend-frontend bağlantıları ve veritabanı katmanıyla birlikte %100 "Done" sütununa taşınmıştır. Chat SSE (Server-Sent Events) streaming akışı içeren "Yapay Zeka Sohbet Asistanı" modülü (11 SP) ise arayüz tasarımları ve API'leri hazır olmasına rağmen, gerçek zamanlı token akışının tam entegrasyon cilası için "In Progress" (Devam Edenler) durumuna alınmış ve Sprint 3'e aktarılmıştır.
+
+#### Sprint 2 Puan Durumu Tablosu
+| Durum | Story Sayısı | Toplam SP | Açıklama |
+| :--- | :---: | :---: | :--- |
+| **Tamamlanan (Done)** | 4 | **44 SP** | CV Analizi, CV Writer, Skill Gap, Roadmap, Mülakat ve PDF Export |
+| **Devam Eden (In Progress)** | 1 | **11 SP** | Sohbet (Chat) Arayüzü ve Orchestrator SSE Akışı |
+| **Reddedilen / Pivot Edilen (Rejected)** | 1 | **15 SP** | Model Fine-Tuning Süreci ve QLoRA Eğitim Altyapısı |
+| **SPRINT KAPASİTESİ** | **6** | **70 SP** | **%80 Başarı Oranı (Geliştirme / Core AI)** |
+
+---
+
+### Daily Scrum
+Sprint 2 boyunca takım üyelerinin farklı lokasyonlarda bulunması ve bootcamp süresindeki yoğun takvimleri nedeniyle Daily Scrum toplantılarının anlık ve yazılı olarak **Slack üzerinden yürütülmesine** karar verilmiştir.
+*   Her gün düzenli olarak "Dün ne yaptım?", "Bugün ne yapacağım?" ve "Önümde bir engel (blocker) var mı?" soruları üzerinden durum güncellemeleri paylaşılmıştır.
+*   Yapay Zeka modelinin fine-tune sürecindeki veri kısıtları ve RAG mimarisine geçiş kararı gibi kritik kararlar bu toplantılardaki durum değerlendirmeleri sırasında alınmıştır.
+
+Daily Scrum yazışma geçmişleri ve toplantı çıktıları PDF formatında dokümante edilerek depoda saklanmaktadır:
+
+👉 [Grup82-Sprint2-DailyScrums.pdf](docs/sprint2/Grup82-Sprint2-DailyScrums.pdf)
+
+---
+
+### Sprint Board Screenshotları
+
+Sprint 2 süresince Miro ve GitHub Projects üzerindeki iş takip panolarımızın gelişim süreçlerine ait ekran görüntüleri aşağıda yer almaktadır:
+
+#### 1. Sprint Başlangıcı (To Do & Planlama Aşaması)
+![Sprint Board - Başlangıç](docs/sprint2/sprint-board-start.png)
+
+#### 2. Geliştirme Süreci (In Progress Aşaması)
+![Sprint Board - Geliştirme Süreci](docs/sprint2/sprint-board-mid.png)
+
+#### 3. Sprint Sonu (Done, In Progress ve Rejected Kart Dağılımı)
+![Sprint Board - Sprint Sonu](docs/sprint2/sprint-board-end.png)
+
+---
+
+### Ürün Durumu: Ekran Görüntüleri
+Sprint 2 sonunda mock/fake veri katmanı tamamen kapatılmış, frontend ile backend (FastAPI + Celery + Neon DB) entegrasyonu tamamlanmıştır. Uygulama, modern koyu/açık tema destekli yepyeni bir tasarım sistemine kavuşturulmuştur.
+
+#### 1. Yeni Koyu/Açık Tema Dashboard (Panel) Ekranı
+![Dashboard Ekranı](docs/sprint2/product-screens/dashboard.png)
+
+#### 2. Çok Formatlı CV & LinkedIn PDF Birleşik Yükleme Sayfası
+![CV Yükleme](docs/sprint2/product-screens/cv-upload.png)
+
+#### 3. 14 Modüler Bölüm Seçimli AI CV Oluşturucu ve Editör
+![CV Builder](docs/sprint2/product-screens/cv-builder.png)
+
+#### 4. pgvector RAG Tabanlı Skill Gap (Beceri Boşluğu) Analiz Ekranı
+![Skill Gap](docs/sprint2/product-screens/skill-gap.png)
+
+#### 5. İnteraktif Görev İşaretlemeli Haftalık Kariyer Yol Haritası (Roadmap)
+![Roadmap](docs/sprint2/product-screens/roadmap.png)
+
+#### 6. Teknik Soru-Cevap ve Süre Sayaçlı Mülakat Simülasyonu
+![Mülakat](docs/sprint2/product-screens/interview.png)
+
+#### 7. Sparkle Filigranlı ve Öneri Balonlu AI Chat (Sohbet) Sayfası
+![Chat](docs/sprint2/product-screens/chat.png)
+
+#### 8. GitHub Hesap Entegrasyonu ve Proje Çekme Ekranı
+![GitHub Connect](docs/sprint2/product-screens/github-connect.png)
+
+---
+
+### Sprint Review
+Sprint 2 **"Ürün Odaklı"** bir yaklaşımla, platformun söz verilen tüm ana özelliklerini çalışan ve birbirine bağlı birer ürün haline getirmeyi başarmıştır. Geliştirilen fonksiyonel yetkinlikler şu şekildedir:
+
+*   **Entegrasyon Tamamlandı (No-Mock Auth):** JWT kimlik doğrulama, register, login ve oturum yönetimleri frontend tarafında Zustand persist mağazası ve Axios interceptor'ları ile tamamen backend'e bağlanmıştır.
+*   **37/37 Backend Test Başarısı:** Veritabanı sahiplik kontrolleri (IDOR önleme), şifre hash'leme, dosya silme ve async Celery görevleri dâhil olmak üzere yazılan 37 backend birim ve entegrasyon testinin tamamı başarıyla geçmiştir.
+*   **Güvenli CV/LinkedIn Analiz Pipeline'ı:** 5 MB limitli, `python-magic` ile gerçek magic-byte ve MIME kontrolü yapan dosya yükleme API'si tamamlanmıştır. PyMuPDF ile parse edilen özgeçmişler Celery kuyruğuna alınmakta ve Türkçe kalite skoru üretilmektedir.
+*   **Modüler CV Oluşturma & PDF Çıktısı:** 14 farklı CV bölümü arasından seçim yapmayı sağlayan form yapısı Mistral-7B ile buluşturulmuş, inline editör debounced kayıt sistemine bağlanmış ve WeasyPrint ile standartlara uygun PDF indirme altyapısı kurulmuştur.
+*   **pgvector RAG ve Yol Haritası:** Neon PostgreSQL üzerindeki `pgvector` eklentisiyle cosine similarity RAG benzerlik araması başarıyla çalıştırılmıştır. Hedef pozisyon ile kullanıcı becerileri karşılaştırılarak eksikler listelenmekte, kişiye özel interaktif ve saat kısıtlı haftalık yol haritaları üretilebilmektedir.
+*   **Mülakat Simülasyonu:** Seçilen kategori ve zorluğa göre anlık Türkçe sorular üreten, kullanıcının cevaplarını 0-10 arası puanlayıp Türkçe geri bildirim veren ve oturum sonunda performans özeti çıkaran mülakat modülü tamamlanmıştır.
+
+---
+
+### Sprint Retrospective
+Sprint 2 sonunda takım süreçlerimizin, çalışma dinamiklerimizin ve aldığımız teknik kararların değerlendirilmesi şu şekildedir:
+
+#### 🟢 Neler İyi Gitti?
+*   **Kod Kalitesi ve Entegrasyon Hızı:** Backend ve frontend arasındaki veri iletişimi sıfır hata ile tamamlanmış, tüm sayfalar gerçek veriye bağlanmıştır. 37 testin çalışır durumda olması regresyonları önlemiştir.
+*   **Modern Tasarım Sistemi:** Uygulamanın jenerik görünümü, koyu/açık tema toggle butonu içeren, amaca uygun pastel renk paletlerine ve Lucide-react SVG ikon setlerine sahip modern bir tasarım diline kavuşturulmuştur.
+*   **Güçlü Hata Yönetimi:** JSONB mutasyon takip hataları ve chat IDOR açıkları başarıyla çözüme kavuşturulmuştur.
+
+#### 🟡 Geliştirilmesi Gerekenler / Karşılaşılan Zorluklar
+*   **Fine-Tuning Veri Kısıtı ve Stratejik Pivot:** Hedeflediğimiz kalitede Türkçe kariyer diyalogu ve CV veri kümesine ulaşılamamıştır. Ekip, süreci tıkamak yerine Agile felsefesine uygun olarak hızlıca aksiyon almış ve fine-tuning model geliştirmesini iptal etmiştir. Bunun yerine **Base Model + Gelişmiş Prompt Orkestrasyonu + pgvector RAG** mimarisine geçilmiştir. Bu karar, sunucu maliyetlerini düşürmüş ve anlamsal eşleşme kalitesini %90+ seviyesinde tutmuştur.
+*   **Gerçek Zamanlı Streaming Gecikmesi:** Orchestrator SSE token-streaming altyapısı yazılmış ve frontend arayüzünde kelime bazlı akış simüle edilmiştir. Ancak gerçek streaming motorunun tam entegrasyonu ve cila testleri zaman kısıtı nedeniyle Sprint 3'e aktarılmıştır.
+
+#### 🔵 Gelecek Sprintte (Sprint 3) Neler Yapılacak?
+1.  **PDF Tasarım İyileştirmesi:** Mevcut sade PDF çıktısı kurumsal standartlarda iki sütunlu profesyonel bir tasarıma (`cv_styled.html`) yükseltilecektir.
+2.  **SSE Streaming Bağlantısı:** Sohbet odasındaki kelime kelime akış backend token-stream motoruna tam entegre edilecektir.
+3.  **Güvenlik ve Performans:** Rate-limiting middleware (slowapi) eklenecek, sunucu cold start sürelerini azaltmak için keep-alive pingleme servisi kurulacaktır.
+4.  **Canlıya Dağıtım ve Test:** Backend Railway'e (Docker + Celery), frontend ise Vercel'e deploy edilecek ve jüriye sunulmak üzere uçtan uca E2E testleri ile sunum slaytları tamamlanacaktır.
+
 # Kullanılan Teknolojiler
 
 > Bu bölümü projenizde gerçekten kullanılan teknolojilere göre güncelleyiniz.
