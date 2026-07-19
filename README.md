@@ -147,17 +147,9 @@ Sprint board ekran görüntüleri aşağıdaki alana eklenmelidir.
 
 > Görselleri repo içinde `docs/sprint1/` klasörüne ekledikten sonra aşağıdaki dosya adlarını aynı şekilde kullanabilirsiniz.
 
-### Sprint Board - Başlangıç
-
-![Sprint Board Başlangıç](docs/sprint1/sprint-board-baslangic.png)
-
-### Sprint Board - Geliştirme Süreci
-
-![Sprint Board Geliştirme Süreci](docs/sprint1/sprint-board-gelisim.png)
-
 ### Sprint Board - Sprint Sonu
 
-![Sprint Board Sprint Sonu](docs/sprint1/sprint-board-son.png)
+![Sprint Board Sprint Sonu](docs/sprint1/sprint1-board-son.png)
 
 ## Ürün Durumu: Ekran Görüntüleri
 
@@ -289,13 +281,7 @@ Daily Scrum yazışma geçmişleri ve toplantı çıktıları PDF formatında do
 
 Sprint 2 süresince Miro ve GitHub Projects üzerindeki iş takip panolarımızın gelişim süreçlerine ait ekran görüntüleri aşağıda yer almaktadır:
 
-#### 1. Sprint Başlangıcı (To Do & Planlama Aşaması)
-![Sprint Board - Başlangıç](docs/sprint2/sprint-board-start.png)
-
-#### 2. Geliştirme Süreci (In Progress Aşaması)
-![Sprint Board - Geliştirme Süreci](docs/sprint2/sprint-board-mid.png)
-
-#### 3. Sprint Sonu (Done, In Progress ve Rejected Kart Dağılımı)
+#### Sprint Sonu (Done, In Progress ve Rejected Kart Dağılımı)
 ![Sprint Board - Sprint Sonu](docs/sprint2/sprint2_completed_1.png)
 
 ---
