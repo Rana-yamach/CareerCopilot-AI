@@ -159,7 +159,8 @@ Sprint 1 sonunda CareerAI projesinin temel frontend ekranları hazırlanmıştı
 
 ### Login / Register Ekranı
 
-![Login Register](docs/sprint1/product-screens/login-register.png)
+![Login Register](docs/sprint1/product-screens/login.png)
+![Login Register](docs/sprint1/product-screens/register.png)
 
 ### Dashboard Ekranı
 
