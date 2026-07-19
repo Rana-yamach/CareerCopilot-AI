@@ -283,6 +283,7 @@ Sprint 2 süresince Miro ve GitHub Projects üzerindeki iş takip panolarımız�
 
 #### Sprint Sonu (Done, In Progress ve Rejected Kart Dağılımı)
 ![Sprint Board - Sprint Sonu](docs/sprint2/sprint2_completed_1.png)
+![Sprint Board - Sprint Sonu (devam)](docs/sprint2/sprint2_completed_2.PNG)
 
 ---
 
