@@ -268,13 +268,13 @@ Sprint 2 (6 Temmuz 2026 - 19 Temmuz 2026) geliştirme planlamamız, projenin en 
 ---
 
 ### Daily Scrum
-Sprint 2 boyunca takım üyelerinin farklı lokasyonlarda bulunması ve bootcamp süresindeki yoğun takvimleri nedeniyle Daily Scrum toplantılarının anlık ve yazılı olarak **Slack üzerinden yürütülmesine** karar verilmiştir.
+Sprint 2 boyunca takım üyelerinin farklı lokasyonlarda bulunması ve bootcamp süresindeki yoğun takvimleri nedeniyle Daily Scrum toplantılarının anlık ve yazılı olarak **WhatsApp üzerinden yürütülmesine** karar verilmiştir.
 *   Her gün düzenli olarak "Dün ne yaptım?", "Bugün ne yapacağım?" ve "Önümde bir engel (blocker) var mı?" soruları üzerinden durum güncellemeleri paylaşılmıştır.
 *   Yapay Zeka modelinin fine-tune sürecindeki veri kısıtları ve RAG mimarisine geçiş kararı gibi kritik kararlar bu toplantılardaki durum değerlendirmeleri sırasında alınmıştır.
 
 Daily Scrum yazışma geçmişleri ve toplantı çıktıları PDF formatında dokümante edilerek depoda saklanmaktadır:
 
-👉 [Grup82-Sprint2-DailyScrums.pdf](docs/sprint2/Grup82-Sprint2-DailyScrums.pdf)
+[Grup82-Sprint2-DailyScrums.pdf](docs/sprint2/Grup82-Sprint2-DailyScrums.pdf)
 
 ---
 
