@@ -104,6 +104,7 @@ class BaseAgent:
         GitHub dilleriyle zenginleştirme, heuristic skor hesaplama)
         uygulayabilir; bu yüzden ham veriyle birlikte bayrak da döndürülür.
         """
+        llm_output: str | None = None
         try:
             llm_output = await self.llm_client.generate(
                 prompt, max_tokens=max_tokens, temperature=temperature
@@ -112,8 +113,12 @@ class BaseAgent:
             if validate_fn is not None and not validate_fn(parsed):
                 raise ValueError("llm_output_validation_failed")
             return parsed, False
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
+            preview = (llm_output or "")[:500]
             logger.warning(
-                "%s: LLM çağrısı başarısız/atlandı, heuristik moda geçildi.", self.name
+                "%s: LLM çağrısı başarısız/atlandı, heuristik moda geçildi. Hata: %r | Ham çıktı (ilk 500 karakter): %r",
+                self.name,
+                exc,
+                preview,
             )
             return fallback_fn(), True
