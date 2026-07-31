@@ -1,49 +1,52 @@
 """Embedding servisi (TASK-146): sentence-transformers/all-MiniLM-L6-v2.
 
-Model process başına bir kez (singleton) yüklenir. Sprint 2 RAG akışında
-(Skill Gap Agent, seed script) kullanılır.
+HF Inference Providers'ın (hf-inference) feature-extraction endpoint'i
+üzerinden uzaktan çağrılır. Daha önce bu model yerel `sentence-transformers`
++ `torch` ile process içinde yükleniyordu; bu, aynı container'da çalışan
+FastAPI + Celery worker ile birlikte bellek kullanımını Render'ın ücretsiz
+katmanındaki 512 MB sınırının üzerine çıkarıp OOM'a (container'ın bellek
+yetersizliğinden öldürülüp yeniden başlatılmasına) yol açtığı için uzak API
+çağrısına taşındı.
 """
 from __future__ import annotations
 
-import threading
+import httpx
 
 from app.config import settings
+from app.core.constants import MSG_LLM_ERROR
+from app.core.exceptions import LLMError
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-_model = None
-_model_lock = threading.Lock()
-
 EMBEDDING_DIM = 384
 
-
-def _get_model():
-    global _model
-    if _model is None:
-        with _model_lock:
-            if _model is None:
-                # Import burada yapılır: sentence-transformers/torch yükleme maliyeti
-                # yalnızca ilk gerçek kullanımda ödenir (worker/app start-up hızlı kalır).
-                from sentence_transformers import SentenceTransformer
-
-                logger.info("Embedding modeli yükleniyor: %s", settings.embedding_model_id)
-                _model = SentenceTransformer(settings.embedding_model_id)
-    return _model
+_FEATURE_EXTRACTION_URL = (
+    "https://router.huggingface.co/hf-inference/models/{model_id}/pipeline/feature-extraction"
+)
+_REQUEST_TIMEOUT_SECONDS = 30.0
 
 
-def encode(texts: str | list[str]) -> list[list[float]]:
-    """Metin(ler)i 384 boyutlu embedding vektörüne dönüştürür."""
+async def encode(texts: str | list[str]) -> list[list[float]]:
+    """Metin(ler)i 384 boyutlu embedding vektörüne dönüştürür (HF Inference Providers üzerinden)."""
     single = isinstance(texts, str)
     inputs = [texts] if single else texts
     if not inputs:
         return []
 
-    model = _get_model()
-    vectors = model.encode(inputs, convert_to_numpy=True, normalize_embeddings=True)
-    return [vector.tolist() for vector in vectors]
+    url = _FEATURE_EXTRACTION_URL.format(model_id=settings.embedding_model_id)
+    headers = {"Authorization": f"Bearer {settings.hf_api_token}"} if settings.hf_api_token else {}
+
+    try:
+        async with httpx.AsyncClient(timeout=_REQUEST_TIMEOUT_SECONDS) as client:
+            response = await client.post(url, headers=headers, json={"inputs": inputs, "normalize": True})
+        response.raise_for_status()
+        return response.json()
+    except httpx.HTTPError:
+        logger.exception("Embedding API çağrısı başarısız oldu.")
+        raise LLMError(MSG_LLM_ERROR) from None
 
 
-def encode_one(text: str) -> list[float]:
-    vectors = encode([text])
+async def encode_one(text: str) -> list[float]:
+    vectors = await encode([text])
     return vectors[0] if vectors else [0.0] * EMBEDDING_DIM

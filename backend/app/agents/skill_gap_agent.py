@@ -19,7 +19,7 @@ DEFAULT_RESOURCE = {"title": "Genel öğrenme kaynağı araştırması yapın", 
 
 async def fetch_skill_requirement_chunks(db: AsyncSession, target_position: str, limit: int = 5) -> list[str]:
     try:
-        query_vector = encode_one(target_position)
+        query_vector = await encode_one(target_position)
     except Exception:  # noqa: BLE001
         logger.warning("Embedding modeli yüklenemedi, RAG sorgusu atlanıyor.")
         return []

@@ -25,7 +25,7 @@ async def index_document_text(db: AsyncSession, document: UploadedDocument) -> i
     if not chunks:
         return 0
 
-    vectors = encode([c["content"] for c in chunks])
+    vectors = await encode([c["content"] for c in chunks])
 
     for chunk, vector in zip(chunks, vectors, strict=False):
         embedding_row = DocumentEmbedding(

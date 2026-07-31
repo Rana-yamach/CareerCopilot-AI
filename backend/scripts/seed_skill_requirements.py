@@ -126,7 +126,7 @@ async def seed() -> None:
             chunks = chunk_text(doc_text.strip())
             if not chunks:
                 continue
-            vectors = encode([c["content"] for c in chunks])
+            vectors = await encode([c["content"] for c in chunks])
 
             for chunk, vector in zip(chunks, vectors, strict=False):
                 db.add(
