@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 from dataclasses import dataclass, field
 from typing import Any, Callable
 
@@ -17,6 +18,34 @@ from app.llm.hf_client import HFInferenceClient
 PROMPTS_DIR = os.path.join(os.path.dirname(__file__), "prompts")
 
 logger = get_logger(__name__)
+
+_JSON_FENCE_RE = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
+
+
+def _extract_json_payload(text: str) -> str:
+    """LLM çıktısından JSON gövdesini çıkarır.
+
+    Chat-instruct modeller (fine-tune edilmemiş olsalar dahi) genellikle
+    JSON'ı markdown kod bloğuna sarar veya öncesine/sonrasına açıklama
+    cümlesi ekler ("İşte analiz:" gibi). Ham metnin tamamını doğrudan
+    `json.loads`'a vermek bu gayet yaygın durumlarda gereksiz yere
+    başarısız olup heuristik moda düşülmesine yol açıyordu; bu fonksiyon
+    önce kod bloğunu, sonra da metindeki en dış JSON nesnesi/dizisini
+    ayıklayarak parse'ı olabildiğince toleranslı hale getirir.
+    """
+    fence_match = _JSON_FENCE_RE.search(text)
+    candidate = fence_match.group(1) if fence_match else text
+
+    start_candidates = [i for i in (candidate.find("{"), candidate.find("[")) if i != -1]
+    if not start_candidates:
+        return candidate.strip()
+    start = min(start_candidates)
+
+    end = max(candidate.rfind("}"), candidate.rfind("]"))
+    if end == -1 or end < start:
+        return candidate.strip()
+
+    return candidate[start : end + 1].strip()
 
 
 @dataclass
@@ -79,7 +108,7 @@ class BaseAgent:
             llm_output = await self.llm_client.generate(
                 prompt, max_tokens=max_tokens, temperature=temperature
             )
-            parsed = json.loads(llm_output)
+            parsed = json.loads(_extract_json_payload(llm_output))
             if validate_fn is not None and not validate_fn(parsed):
                 raise ValueError("llm_output_validation_failed")
             return parsed, False
