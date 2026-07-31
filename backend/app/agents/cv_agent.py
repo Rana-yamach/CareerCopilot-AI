@@ -408,7 +408,7 @@ class CVAgent(BaseAgent):
             return {"parsed_skills": _heuristic_parsed_skills(raw_text)}
 
         parsed, used_fallback = await self.generate_json_with_fallback(
-            prompt, fallback_fn=_fallback, max_tokens=768, temperature=0.3
+            prompt, fallback_fn=_fallback, max_tokens=1200, temperature=0.3
         )
 
         if used_fallback:

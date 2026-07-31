@@ -6,6 +6,11 @@ Ham Metin:
 
 GitHub Dil İstatistikleri (varsa): {{ github_languages }}
 
+ÖNEMLİ: `languages`, `frameworks` ve `tools` alanlarında metinde geçen TÜM
+programlama dillerini, framework/kütüphaneleri ve araçları EKSİKSİZ listele —
+yalnızca en öne çıkanları değil, metinde adı geçen HER BİRİNİ dahil et.
+Hiçbirini atlama, özetleme veya "vb." gibi kısaltma.
+
 Yalnızca şu JSON şemasında yanıt ver:
 {
   "parsed_skills": {"languages": [], "frameworks": [], "tools": [], "experience": [], "education": []},
