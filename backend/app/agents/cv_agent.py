@@ -428,6 +428,12 @@ class CVAgent(BaseAgent):
             if doc_type_value != DocumentType.CV.value:
                 cv_score = None
                 cv_score_explanation = None
+            elif not isinstance(cv_score, (int, float)):
+                # Model JSON'da parsed_skills'i doğru üretti ama cv_score alanını
+                # atladı — LLM'in zaten iyi çıkardığı becerileri heba etmemek için
+                # tam heuristik moda düşmek yerine yalnızca eksik skoru,
+                # LLM'in ürettiği gerçek parsed_skills üzerinden hesaplıyoruz.
+                cv_score, cv_score_explanation = _heuristic_cv_score(parsed_skills, raw_text)
 
         return {
             "parsed_skills": parsed_skills,
