@@ -442,14 +442,33 @@ Sprint 3, planlanan "cila ve demo" hedefinden çok, ürünün **temel güvenilir
 
 # Kurulum ve Çalıştırma
 
-> Proje dosyaları repoya eklendikten sonra bu bölüm güncellenmelidir.
+Proje, Frontend (React/Vite) ve Backend (FastAPI/Celery/PostgreSQL) olmak üzere iki ana klasörden (monorepo) oluşmaktadır. Geliştirme ortamını yerel bilgisayarınızda ayağa kaldırmak için Docker ve Node.js gereklidir.
 
+**1. Repoyu Klonlayın:**
 ```bash
 git clone https://github.com/Rana-yamach/CareerCopilot-AI.git
 cd CareerCopilot-AI
+```
+
+**2. Ortam Değişkenlerini Ayarlayın:**
+Projenin çalışması için API anahtarları ve veritabanı bağlantılarına ihtiyaç vardır. Hem `frontend` hem de `backend` klasörlerinde bulunan `.env.example` dosyalarını kopyalayarak `.env` dosyalarını oluşturun ve gerekli değerleri doldurun.
+
+**3. Backend ve Veritabanı Servislerini Başlatın (Docker):**
+Kök dizinde Docker Compose kullanarak FastAPI backend, Celery worker, Redis ve pgvector veritabanı servislerini tek komutla ayağa kaldırın:
+```bash
+docker-compose up -d
+```
+*(Backend API'si `http://localhost:8000` adresinde çalışmaya başlayacaktır).*
+
+**4. Frontend Uygulamasını Başlatın:**
+Yeni bir terminal penceresi açın, frontend dizinine gidin ve bağımlılıkları yükleyip uygulamayı başlatın:
+```bash
+cd frontend
 npm install
 npm run dev
 ```
+*(Frontend uygulaması `http://localhost:5173` adresinde çalışacak ve Vite config üzerinden backend isteklerini otomatik olarak yönlendirecektir).*
+
 
 ---
 
