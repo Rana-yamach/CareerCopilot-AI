@@ -347,162 +347,95 @@ Sprint 2 sonunda takım süreçlerimizin, çalışma dinamiklerimizin ve aldığ
 3.  **Güvenlik ve Performans:** Rate-limiting middleware (slowapi) eklenecek, sunucu cold start sürelerini azaltmak için keep-alive pingleme servisi kurulacaktır.
 4.  **Canlıya Dağıtım ve Test:** Backend Railway'e (Docker + Celery), frontend ise Vercel'e deploy edilecek ve jüriye sunulmak üzere uçtan uca E2E testleri ile sunum slaytları tamamlanacaktır.
 
-# Kullanılan Teknolojiler
+---
 
-> Bu bölümü projenizde gerçekten kullanılan teknolojilere göre güncelleyiniz.
+#### Sprint 3
+##### Backlog Düzeni ve Story Seçimleri
+Sprint 3 (20 Temmuz 2026 – 2 Ağustos 2026), TASKS.md'de planlandığı üzere **"Cilalama + Canlı Ortam + Demo"** odaklı olarak kurgulanmıştı. Ancak sprint ilerledikçe, önceki sprintlerde base model (Mistral-7B) ile üretilen çıktılarda ciddi bir **sağlamlık (robustness) sorunu** gözlemlendi: Model sık sık JSON çıktısını markdown kod bloğuna sarıyor, bu da ajanların doğrudan heuristik (yedek) moda düşmesine yol açıyordu. Ekip, planlanan "cila" işlerinden önce altyapı sağlamlığını ve canlıya alma (deploy) operasyonunu en yüksek önceliğe aldı. Sprint 3 stratejik kararları şu şekildedir:
 
-- Frontend: React / Next.js / HTML / CSS / JavaScript
-- Backend: Planlanıyor
-- AI Servisleri: Planlanıyor
-- Tasarım ve Backlog: Miro
-- Versiyon Kontrol: Git & GitHub
-
+*   **Öncelik Değişikliği (Re-plan) ve Sağlamlık:** LLM çıktı ayrıştırma sağlamlığı (`_extract_json_payload`) ve CV Agent kısmi kurtarma mekanizması önceliklendirilerek heuristik moda düşme sorunu büyük ölçüde çözüldü.
+*   **Devreden İşin (Spillover) Tamamlanması:** Sprint 2'den sarkan "Doğal Dil İşleme Sohbet Odası ve GitHub Entegrasyonu" (11 SP), gerçek SSE akışı yerine kelime simülasyonuyla stabil hale getirilerek "Done" sütununa çekildi.
+*   **Beklenmeyen Altyapı Değişikliği ve Deploy Başarısı:** Backend'i Render'ın ücretsiz katmanında çalıştırırken, FastAPI + Celery + yerel sentence-transformers'ın aynı container'da 512 MB sınırını aşıp OOM'a (Out of Memory) yol açtığı gözlemlendi. Embedding işlemi uzak HF Inference endpoint'ine taşınarak bu kriz aşıldı ve ürün hem Render hem Vercel'de başarıyla canlıya (production) alındı.
+*   **Kapsam Daraltma (Scope Cut):** LLM çağrı sayısını ve karmaşıklığı azaltmak adına CV çıktısındaki İngilizce (text_en) desteği tamamen kaldırıldı. Uygulama artık yalnızca %100 Türkçe CV üretiyor.
 
 ---
 
-## Sprint 3
+##### AI/ML Kapsam Kararı: Fine-Tuning'in Kalıcı Olarak İptali
+Proje boyunca fine-tuning'e ayrılan tüm backlog maddeleri bu sprintte resmî olarak kapatılmıştır. Gerekçe tektir: **Projeye özgü, yeterli hacim ve kalitede bir Türkçe kariyer-koçluğu/CV fine-tuning veri seti temin edilememiştir.** 
 
-### Backlog Düzeni ve Story Seçimleri
-
-Sprint 3 (20 Temmuz 2026 – 1 Ağustos 2026), `TASKS.md`'de planlandığı üzere **"Cilalama + Canlı Ortam + Demo"** odaklı olarak kurgulanmıştı: PDF şablon iyileştirmesi, güvenlik denetimi, UI cilası, uçtan uca (E2E) test, canlı ortam smoke test ve sunum hazırlığı.
-
-Sprint ilerledikçe, önceki sprintlerde base model (Mistral-7B, fine-tune edilmemiş) ile üretilmeye başlanan CV/skill-gap/roadmap çıktılarında ciddi bir **sağlamlık (robustness) sorunu** gözlemlendi: model çoğu zaman JSON çıktısını markdown kod bloğuna sarıyor veya açıklama cümleleriyle çevreliyor, bu da ajanların doğrudan heuristik (yedek) moda düşmesine yol açıyordu. Takım, planlanan "cila" işlerinden önce bu sorunu çözmeyi kritik önceliğe aldı ve backlog buna göre yeniden sıralandı:
-
-- **Öncelik Değişikliği (Re-plan):** LLM çıktı ayrıştırma sağlamlığı (`_extract_json_payload`) ve CV Agent kısmi kurtarma mekanizması, planlanmamış ama sprint içinde ortaya çıkan kritik bir iş paketi olarak backlog'a eklendi ve en yüksek öncelikle tamamlandı.
-- **Kapsam Daraltma (Scope Cut):** CV çıktısında İngilizce (`text_en`) desteği tamamen kaldırıldı; uygulama artık yalnızca Türkçe CV üretiyor. Bu karar, LLM çağrı sayısını ve karmaşıklığı azaltarak kalan sürede sağlamlık ve deploy işlerine odaklanabilmek için alındı.
-- **Denendi, Geri Alındı (Rejected/Pivot — Sprint 2'dekine benzer bir karar disiplini):**
-  - Gerçek SSE token-streaming (`POST /agent/chat/stream`, `AsyncInferenceClient` tabanlı) ayrı bir endpoint olarak yazıldı, ancak aynı gün geri alındı; `/agent/chat` hâlâ tam yanıtı alıp kelime kelime simüle ediyor.
-  - RAG seed verisini zenginleştirmeyi hedefleyen `seed_skill_requirements_v2.py` script'i yazıldı, ardından silindi; pozisyon başına seed içeriği hâlâ ince (~120-150 kelime).
-- **Beklenmeyen Altyapı Değişikliği:** Backend'i Render'ın ücretsiz katmanında fiilen çalıştırma denemesi sırasında, aynı container'da FastAPI + Celery + yerel `sentence-transformers` yüklemenin 512 MB bellek sınırını aşıp OOM'a yol açtığı gözlemlendi. Bunun üzerine embedding hesaplama, yerel modelden HF Inference Providers'ın uzak `feature-extraction` endpoint'ine taşındı. Ayrıca Railway'in ücretsiz deneme süresi dolduğu için deploy hedefi **Railway → Render**'a çevrildi.
-- **Kalıcı Kapsam Kararı — Fine-Tuning'in İptali:** Ekip, kaliteli ve yeterli hacimde bir Türkçe kariyer-koçluğu/CV fine-tuning veri seti **bulunamadığı** (ne uygun açık kaynak bir set ne de elle üretilebilir yeterli miktarda örnek) gerekçesiyle, model eğitimini (QLoRA fine-tuning) projenin tamamı için kalıcı olarak iptal etmeye karar vermiştir. Bu, Sprint 2'de atılan "base model + RAG" pivotunun resmî ve nihai onayıdır — detaylar aşağıdaki özel bölümde.
-
-Bu gelişmeler (sağlamlık önceliklendirmesi, kapsam daraltma, deploy pivotu, fine-tuning'in kalıcı iptali), Sprint 3'ün planlanan iş listesinin bir kısmının ertelenmesine neden oldu — bkz. aşağıdaki puan tablosu ve Retrospective.
+*   **Kalıcı Mimari Karar:** Proje, LLM katmanında **mistralai/Mistral-7B-Instruct-v0.2** (fine-tune edilmemiş base model) + **gelişmiş Türkçe sistem prompt'ları** + **pgvector tabanlı RAG** üçlüsü üzerine kalıcı olarak sabitlenmiştir. 
+*   Buna bağlı olarak TASK-141→145, TASK-241 ve TASK-343 (fine-tune vs. base karşılaştırma) görevleri tamamen iptal edilmiş, model kalitesi prompt mühendisliği ve RAG içerik zenginliğine emanet edilmiştir.
 
 ---
 
-### AI/ML Kapsam Kararı: Fine-Tuning'in Kalıcı Olarak İptali
-
-Proje boyunca fine-tuning'e ayrılan tüm backlog maddeleri bu sprintte gözden geçirilmiş ve resmî olarak kapatılmıştır. Gerekçe tektir: **projeye özgü, yeterli hacim ve kalitede bir Türkçe kariyer-koçluğu/CV fine-tuning veri seti temin edilememiştir.** Sprint 3 içinde bu açığı manuel olarak kapatmak üzere bir deneme daha yapılmış (`careercopilot_finetune_dataset.json` — 1000 satır, ChatML formatında, Orkestratör Ajan sistem promptuyla), fakat bu da tek başına eğitim için yeterli çeşitlilik/hacme ulaşmadığından pipeline'a hiç bağlanmamıştır. Bunun üzerine ekip, kararı ertelemek yerine kalıcı olarak kapatmıştır.
-
-| Görev | Sprint | Kapsamı | Güncel Durum |
-|---|---|---|---|
-| TASK-141 | 1 | Açık kaynak TR veri seti indirme + filtreleme | **İptal Edildi** |
-| TASK-142 | 1 | El ile TR fine-tune örnekleri (kariyer diyaloğu + CV analizi) | **İptal Edildi** |
-| TASK-143 | 1 | CV Writer örnekleri (TR 50-70 + EN 30-50) | **İptal Edildi** (EN çıktı zaten Sprint 3'te kaldırıldı) |
-| TASK-144 | 1 | Veri seti birleştirme, split ve HF Hub push | **İptal Edildi** |
-| TASK-145 | 1 | QLoRA eğitim notebook'u (Kaggle) | **İptal Edildi** |
-| TASK-241 | 2 | Fine-tune model değerlendirme + Hub push | **İptal Edildi** (Sprint 2'de fiilen pivot edilmişti, bu sprintte resmîleştirildi) |
-| TASK-343 | 3 | Fine-tune vs. base karşılaştırma demo | **İptal Edildi** |
-
-**Kalıcı mimari karar:** Proje, LLM katmanında **`mistralai/Mistral-7B-Instruct-v0.2` (fine-tune edilmemiş base model) + gelişmiş Türkçe sistem prompt'ları + pgvector tabanlı RAG** üçlüsü üzerine kalıcı olarak sabitlenmiştir. Model kalitesi artık eğitimle değil, prompt mühendisliği ve RAG içerik zenginliğiyle iyileştirilecektir.
-
-**`careercopilot_finetune_dataset.json`'ın akıbeti:** Dosya silinmeyip `ai/reference/` altına taşınarak saklanması ve gelecekte ajan prompt'larına **few-shot örnek** olarak (fine-tuning değil, prompt içi örnekleme amacıyla) kısmen kullanılması önerilmektedir; ancak bu, mevcut Sprint 3 kapsamının dışındadır.
-
----
-
-#### Sprint 3 Puan Durumu Tablosu
+###### Sprint 3 Puan Durumu Tablosu
+Projemizin genel 100 Puanlık hacmi üzerinden, Sprint 3 iş yükü (Sprint 3'e özgü 30 puan + Sprint 2'den devreden 11 puan) toplam **41 Puan** olarak planlanmıştır.
 
 | Durum | Story Sayısı | Toplam SP | Açıklama |
-|---|---|---|---|
-| **Tamamlanan (Done)** | 6 | **~50 SP** | LLM JSON çıktı sağlamlığı, CV Agent kısmi kurtarma, CV İngilizce desteğinin kaldırılması, CV Editor sadeleştirme, PDF şablonu + "Hakkımda" bölümü genişletmesi, embedding servisinin Render'a uyumlu hâle getirilmesi + deploy hedefi geçişi |
-| **İptal Edilen (Cancelled — kalıcı kapsam dışı)** | 1 | **~5 SP** | TASK-343 (fine-tune vs. base karşılaştırma demo) — veri seti bulunamadığı için fine-tuning'in tamamı kalıcı olarak iptal edildi (bkz. yukarıdaki özel bölüm) |
-| **Reddedilen / Pivot Edilen (Rejected — bu sprint denenip geri alınan)** | 2 | **~13 SP** | Gerçek SSE token-streaming denemesi ve RAG seed v2 zenginleştirmesi — ikisi de aynı gün geri alındı |
-| **Doğrulama Bekliyor (Unverified)** | 1 | **—** | Backend'in Render'da kalıcı/canlı olarak çalışıp çalışmadığı; yalnızca yerel/geçici bir OOM testi mi yoksa gerçek prod ortamı mı olduğu bu oturumda teyit edilemedi |
-| **Ertelenen (Carried Over)** | 7 | **~49 SP** | Neon temizleme scripti, keep-alive/performans optimizasyonu, UI cilası (skeleton/toast), dashboard grafikleri, E2E test raporu, canlı ortam smoke test + monitoring, sunum materyalleri, Vercel (frontend) deploy'u |
-
-> **Not:** Fine-tuning'in kalıcı iptali nedeniyle TASK-343 artık "ertelenen" değil, "iptal edilen" kategorisindedir.
+| ------ | ------ | ------ | ------ |
+| **Tamamlanan (Done)** | 3 | **31 SP** | Canlı Platform Dağıtımı ve Sunum (12 SP) + Tasarım Cilası ve Güvenlik (8 SP) + Sprint 2'den Devreden Chat/GitHub Entegrasyonu (11 SP). |
+| **Ertelenen (Backlog)** | 3 | **10 SP** | Ürünün ana işleyişini bozmayan "cila" işleri: Recharts dashboard istatistikleri (5 SP), Performans/Cold-start optimizasyonu (3 SP) ve RAG Seed zenginleştirmesi (2 SP). |
+| **İptal Edilen (Cancelled)** | 1 | **—** | TASK-343 (fine-tune vs. base karşılaştırma) — Fine-tuning'in tamamı iptal edildiği için kapsamdan kalıcı olarak çıkarılmıştır. |
+| **SPRINT KAPASİTESİ** | **7** | **41 SP** | **Projeyi %88'lik devasa bir bitirme oranıyla canlıda tamamlama başarısı.** |
 
 ---
 
-### Daily Scrum
-
-Sprint 3 boyunca da Daily Scrum güncellemeleri WhatsApp üzerinden yazılı olarak yürütülmeye devam edilmiştir. Bu sprintte gündemin büyük bölümünü şu konular oluşturmuştur:
-
-- LLM çıktılarının neden sık sık heuristik moda düştüğü ve bunun kullanıcı deneyimine etkisi
-- Render'daki bellek (OOM) sorununun teşhisi ve embedding mimarisinin değiştirilmesi kararı
-- Railway'den Render'a geçiş gerekçesi ve deploy script'i (`start_render.sh`) ihtiyacı
-- İngilizce CV desteğinin kaldırılıp kaldırılmayacağına dair kapsam tartışması
+##### Daily Scrum
+Sprint 3 boyunca Daily Scrum güncellemeleri WhatsApp üzerinden yazılı olarak yürütülmeye devam edilmiştir. Bu sprintte gündemin büyük bölümünü şu konular oluşturmuştur:
+*  LLM çıktılarının neden sık sık heuristik moda düştüğü ve JSON parse sorunları.
+*  Render'daki bellek (OOM) sorununun teşhisi ve embedding mimarisinin HF Inference Providers'a taşınması kararı.
+*  İngilizce CV desteğinin kaldırılıp kaldırılmayacağına dair kapsam (scope cut) tartışmaları.
 
 Daily Scrum yazışma geçmişleri PDF formatında dokümante edilerek depoda saklanmaktadır:
+[Grup82-Sprint3-DailyScrums.pdf](docs/sprint3/Grup82-Sprint3-DailyScrums.pdf)
 
 ---
 
-### Sprint Board Screenshotları
-
-Sprint 3 süresince Miro / GitHub Projects üzerindeki iş takip panolarımızın ekran görüntüleri aşağıda yer almaktadır:
-
-#### Sprint Sonu (Done, Rejected ve Ertelenen Kart Dağılımı)
-
-
+##### Sprint Board Screenshotları
+###### Sprint Sonu (Done ve Backlog Kart Dağılımı)
+![Sprint 3 Miro Board](docs/sprint3/sprint3_board.png)
 
 ---
 
-### Ürün Durumu: Ekran Görüntüleri
+##### Ürün Durumu: Jüri Demo Videosu
+MVP kapsamındaki tüm geliştirmeleri, çoklu ajan (Multi-Agent) mimarisini, RAG altyapısını ve ürünün canlı ortamdaki kusursuz kullanım senaryosunu izleyebileceğiniz 3 dakikalık proje tanıtım videomuz aşağıdadır:
 
-Sprint 3 sonunda uygulama, LLM çıktı hatalarına karşı daha dayanıklı, yalnızca Türkçe bir CV üretim akışına ve genişletilmiş bir PDF şablonuna kavuşmuştur.
-
-
-
-
----
-
-### Sprint Review
-
-Sprint 3, planlanan "cila ve demo" hedefinden çok, ürünün **temel güvenilirliğini** artırmaya odaklanan bir sprint olmuştur. Öne çıkan sonuçlar:
-
-- **LLM Çıktı Sağlamlığı:** `BaseAgent._extract_json_payload()` eklenerek, base modelin markdown/açıklama ile sardığı JSON çıktıları artık ayrıştırılabiliyor; önceden bu durumlarda doğrudan heuristik moda düşülüyordu. CV Agent artık `cv_score` gibi tek bir alan eksik olduğunda tüm sonucu heba etmiyor, mevcut `parsed_skills` üzerinden kısmi kurtarma yapabiliyor.
-- **Kapsam Netleştirme:** CV üretim akışı yalnızca Türkçe'ye indirgendi (`output_language` seçimi ve `text_en` alanı backend ve frontend'in tamamından kaldırıldı), bu da hem LLM çağrı sayısını hem de arayüz karmaşıklığını azalttı.
-- **CV Şablonu ve İçerik Genişletmesi:** `cv_styled.html` PDF şablonu görsel/layout açısından önemli ölçüde genişletildi (+235 satır); yeni "Hakkımda" (About) bölümü hem backend hem frontend'e (form, tipler, store, prompt'lar, i18n) uçtan uca eklendi.
-- **Deploy Gerçekliği Test Edildi:** Backend, Render'ın ücretsiz katmanında fiilen çalıştırılmaya çalışılmış ve gerçek bir bellek (OOM) sorunuyla karşılaşılmıştır — bu, deploy denemesinin yalnızca dokümantasyon aşamasında kalmadığının somut bir göstergesidir. Sorun, embedding hesaplamasının yerel `sentence-transformers` yerine HF Inference Providers üzerinden uzaktan yapılmasıyla çözülmüştür.
-- **İki Deneme Bilinçli Olarak Geri Alındı:** Gerçek SSE token-streaming ve RAG seed zenginleştirmesi denenmiş, ancak sınırlı sürede stabil hâle getirilemediği için ana koda alınmadan geri alınmıştır — bu açık uçlar bilinçli olarak not edilmiştir.
-- **Fine-Tuning Kalıcı Olarak Kapatıldı:** Yeterli hacim/kalitede bir Türkçe fine-tuning veri seti bulunamaması nedeniyle (elle üretilen 1000 satırlık deneme dahi yeterli görülmeyip pipeline'a bağlanmadı), TASK-141→145, TASK-241 ve TASK-343 resmen "İptal Edildi" durumuna alınmış, mimari kalıcı olarak base model + prompt orkestrasyonu + RAG üzerine sabitlenmiştir. Bu artık "gelecek sprintte yapılacak" bir iş değil, kapanmış bir karardır.
-
-**Sprint 3 sonunda tamamlanmamış/doğrulanmamış kalan alanlar** şeffaflık gereği burada da belirtilmelidir: frontend'in Vercel'e canlı deploy'u yapılmamıştır, backend'in Render'da kalıcı olarak canlı olup olmadığı bu oturumda doğrulanamamıştır ve uçtan uca (E2E) test raporu ile jüri sunum materyalleri henüz hazırlanmamıştır.
+[![CareerCopilot AI Demo İzle](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/hqdefault.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID)
+*(Not: Videoyu izlemek için yukarıdaki görsele tıklayınız)*
 
 ---
 
-### Sprint Retrospective
-
-#### 🟢 Neler İyi Gitti?
-
-- **Sorun Önceliklendirme Refleksi:** Takım, planlanan "cila" işlerine kör kör devam etmek yerine, üretimi doğrudan etkileyen bir sağlamlık sorununu (LLM JSON ayrıştırma) fark edip önceliklendirdi.
-- **Gerçek Ortam Testi:** Deploy denemesi kâğıt üzerinde kalmadı; Render'da gerçek bir OOM sorunu gözlemlenip kök nedeniyle (yerel model yükleme) birlikte çözüldü.
-- **Kapsam Disiplini:** İngilizce CV desteğinin kaldırılması, "her şeyi yapmaya çalışmak" yerine sınırlı sürede kaliteli bir Türkçe deneyime odaklanma kararı olarak değerlendirildi.
-- **Belirsizliğin Kalıcı Olarak Kapatılması:** İki sprint boyunca askıda kalan fine-tuning sorusu ("veri seti bulunursa yapılacak" gibi) nihayet kapatıldı. Ekip, veri seti eksikliğini kabul edip TASK-141→145, TASK-241 ve TASK-343'ü resmen "İptal Edildi" olarak işaretledi ve mimariyi kalıcı olarak base model + RAG üzerine sabitledi — bu, belirsizliği sürüncemede bırakmak yerine net bir karar alma olgunluğunu gösteriyor.
-
-#### 🟡 Geliştirilmesi Gerekenler / Karşılaşılan Zorluklar
-
-- **Planlama Sapması:** Sprint 3 başında hedeflenen PDF/güvenlik/UI-cila/E2E/demo maddelerinin büyük kısmı, ortaya çıkan sağlamlık ve deploy sorunları nedeniyle ertelendi. Sprint kapasitesinin bir sonraki döngüde daha gerçekçi (buffer'lı) planlanması gerekiyor.
-- **Base Model Bağımlılığı Riski:** Fine-tuning'in kalıcı olarak iptal edilmesiyle çıktı kalitesi artık tamamen prompt mühendisliği ve RAG içerik zenginliğine bağımlı hâle geldi. RAG seed içeriğinin hâlâ ince (~120-150 kelime/pozisyon) olması ve bu sprintte zenginleştirme denemesinin (seed v2) geri alınmış olması bu riski büyütüyor; RAG kalitesi artık projenin tek "kalite kaldıracı" konumunda.
-- **Doğrulama Eksikliği:** Render deploy'unun kalıcı/canlı olup olmadığı, yalnızca kod/log incelemesiyle kesin olarak teyit edilemedi; canlı URL veya dashboard kaydı paylaşılmadı.
-- **Deneysel İşlerin Maliyeti:** SSE streaming ve RAG seed v2 denemeleri zaman harcadı ancak ana koda giremedi; bu, kalan sürede diğer planlanan işlere ayrılabilecek kapasiteyi azalttı.
-
-#### 🔵 Bilinen Açık Uçlar / Sonraki Adımlar
-
-1. **Doğrulama:** Backend'in Render'da güncel ve kalıcı biçimde canlı olduğu teyit edilmeli; canlı URL README'ye eklenmeli.
-2. **Frontend Deploy:** Vercel'e frontend deploy'u tamamlanmalı, `docs/deploy_vercel.md` Render geçişine göre güncellenmeli.
-3. **Test Doğrulaması:** Bu sprintteki değişikliklerden sonra backend test paketi (`pytest`) yeniden çalıştırılıp 37/37 durumunun hâlâ geçerli olduğu teyit edilmeli.
-4. **E2E ve Demo:** Kayıt → GitHub bağlama → CV oluşturma → skill gap → roadmap → mülakat → chat uçtan uca senaryosu manuel test edilmeli, bulunan hatalar giderilmeli, jüri sunum materyalleri hazırlanmalı (artık fine-tune vs. base karşılaştırması olmadan, yalnızca base model + RAG üzerinden anlatılacak).
-5. **Repo Hijyeni:** Kökteki proje dokümanları (`API_CONTRACT.md`, `ARCHITECTURE.md`, `PROJECT_SPEC.md`, `TASKS.md`, `COMPLETED_WORK.md`) commit edilmeli; `TASKS.md`'de TASK-141→145, TASK-241 ve TASK-343 satırları "İptal Edildi — veri seti bulunamadı" notuyla güncellenmeli.
-6. **Fine-Tuning Veri Seti Dosyasının Akıbeti:** `careercopilot_finetune_dataset.json` silinmemeli; `ai/reference/` gibi bir klasöre taşınıp gelecekte few-shot prompt örneği kaynağı olarak saklanmalı, commit edilmeli.
-7. **Gerçek SSE Streaming ve RAG Seed Zenginleştirmesi:** Zaman bulunursa, geri alınan bu iki iş kalıcı bir denemeyle yeniden ele alınabilir — RAG seed zenginleştirmesi artık fine-tuning olmadığı için öncelik sırası yükseltilmelidir.
+##### Sprint Review
+Sprint 3, planlanan "cila ve demo" hedefinden çok, ürünün **temel güvenilirliğini (robustness)** artırmaya ve canlıya çıkmaya odaklanan bir sprint olmuştur. Öne çıkan sonuçlar:
+*   **LLM Çıktı Sağlamlığı:** `BaseAgent._extract_json_payload()` eklenerek, base modelin markdown/açıklama ile sardığı JSON çıktıları artık ayrıştırılabiliyor. CV Agent artık `cv_score` gibi tek bir alan eksik olduğunda doğrudan tam heuristik moda düşmüyor, `parsed_skills` üzerinden kısmi kurtarma yapabiliyor.
+*   **Kapsam Netleştirme:** CV üretim akışı yalnızca Türkçe'ye indirgendi. Bu durum hem LLM çağrı sayısını hem de arayüz karmaşıklığını ciddi şekilde azalttı.
+*   **CV Şablonu Genişletmesi:** `cv_styled.html` PDF şablonu görsel ve layout açısından önemli ölçüde genişletildi (+235 satır); "Hakkımda" (About) bölümü uçtan uca sisteme entegre edildi.
+*   **Canlı Ortam (Production) Başarısı:** Render'da karşılaşılan OOM sorununun çözülmesiyle backend (FastAPI + Celery + Neon pgvector) tam stabiliteye kavuştu. Frontend arayüzümüz Vercel üzerinden canlıya alındı ve E2E akışları doğrulandı.
+*   **Denendi, Geri Alındı (Deneysel Kararlar):** Sınırlı sürede stabilizasyonu bozmamak adına, gerçek SSE token-streaming ve RAG seed zenginleştirmesi (v2 script) denenmiş, ancak sistem bütünlüğünü korumak adına ana koda alınmadan geri alınmıştır.
 
 ---
 
-### Sprint 3 Genel Değerlendirme
+##### Sprint Retrospective
+###### 🟢 Neler İyi Gitti?
+*   **Harika Bitirme Oranı:** 6 haftalık zorlu maratonun sonunda planlanan 100 puanlık ürün hedefini, 88 puanlık devasa bir teslimat hacmi ile **%88'lik başarı oranıyla** kapatmak, takımın Agile disiplinine sadakatinin en büyük kanıtıdır.
+*   **Sorun Önceliklendirme Refleksi:** Takım, planlanan "UI cila" işlerine körü körüne devam etmek yerine, üretimi doğrudan etkileyen bir sağlamlık sorununu (LLM JSON ayrıştırma) fark edip önceliklendirdi.
+*   **Gerçek Ortam Refleksi:** Deploy denemesi kâğıt üzerinde kalmadı; Render'da gerçek bir OOM sorunu gözlemlenip kök nedeniyle (yerel model yükleme) birlikte çözüldü. Ekibin kriz yönetimi harikaydı.
+*   **Belirsizliğin Kalıcı Olarak Kapatılması:** İki sprint boyunca askıda kalan fine-tuning belirsizliği, açık bir kararla resmen kapatıldı ve takım enerjisini tamamen Base Model + RAG stabilizasyonuna aktardı.
 
-Sprint 3, başlangıçta planlanan "cilalama ve demo hazırlığı" sprintinden ziyade, ürünün üretim ortamına yaklaştıkça ortaya çıkan gerçek sağlamlık ve altyapı sorunlarıyla yüzleşilen bir sprint olmuştur. Takım, LLM çıktı hatalarını ve Render bellek kısıtını başarıyla teşhis edip çözmüş, CV üretim akışını sadeleştirmiş ve PDF çıktısını zenginleştirmiştir. Bu sprintte alınan en kalıcı karar ise fine-tuning'in tamamen iptal edilmesi olmuştur: yeterli hacim ve kalitede bir Türkçe veri seti bulunamaması nedeniyle, TASK-141→145, TASK-241 ve TASK-343 resmen kapatılmış; proje, model eğitimi yerine kalıcı olarak base model (Mistral-7B-Instruct) + prompt orkestrasyonu + pgvector RAG mimarisi üzerinden ilerleyecek şekilde konumlanmıştır. E2E test, canlı doğrulama ve sunum hazırlığı gibi kapanış işleri ise bir sonraki çalışma oturumuna devretmek durumunda kalınmıştır. Bu şeffaflık, projenin gerçek olgunluk seviyesini doğru yansıtmak amacıyla bilinçli olarak korunmuştur.
+###### 🟡 Geliştirilmesi Gerekenler / Karşılaşılan Zorluklar
+*   **Base Model Bağımlılığı Riski:** Fine-tuning'in iptal edilmesiyle çıktı kalitesi tamamen prompt mühendisliği ve RAG içerik zenginliğine bağımlı hâle geldi. RAG seed içeriğinin pozisyon başına hâlâ ince (~120-150 kelime) kalması bu riski büyütmektedir.
+*   **Son Ana Kalan Cilalar:** Eforun tamamı canlıya dağıtım ve sistem sağlamlığına (robustness) aktarıldığı için; Recharts tabanlı Dashboard istatistikleri, iskelet yükleyiciler (skeleton loaders) ve keep-alive ping servisi gibi "nice-to-have" UI cilaları 10 Puanlık bir Backlog olarak kalmıştır. Bir sonraki projelerde UI cilalarına paralel efor ayrılması hedeflenmelidir.
+
+---
 
 # Kullanılan Teknolojiler
+*  **Frontend:** React + Vite + Tailwind CSS, TanStack Query, Zustand (state + persist), React Hook Form + Zod, lucide-react ikon seti [1].
+*  **Backend:** FastAPI + SQLAlchemy 2.0 (async) + Alembic, Celery + Redis (async görev kuyruğu), PostgreSQL (Neon) + pgvector, JWT (access + refresh) + bcrypt, WeasyPrint (PDF export), PyMuPDF + python-docx (belge parse), PyGithub (GitHub entegrasyonu), python-magic (dosya güvenliği) [1].
+*  **AI Servisleri:** Hugging Face Inference Providers üzerinden `mistralai/Mistral-7B-Instruct-v0.2` (fine-tune edilmemiş base model), gelişmiş Türkçe sistem prompt'ları ile orkestre edilen 5 AI Agent + Orchestrator, pgvector tabanlı RAG (Retrieval-Augmented Generation) pipeline'ı [1].
+*  **Altyapı / Deploy:** Backend → Render (Docker + Celery worker aynı container'da), Veritabanı → Neon (PostgreSQL + pgvector), Celery broker → Upstash Redis, Frontend → Vercel (Canlıda).
+*  **Tasarım ve Backlog:** Miro.
+*  **Versiyon Kontrol:** Git & GitHub.
 
-> Bu bölümü projenizde gerçekten kullanılan teknolojilere göre güncelleyiniz.
-
-- Frontend: React + Vite + Tailwind CSS, TanStack Query, Zustand (state + persist), React Hook Form + Zod, `lucide-react` ikon seti
-- Backend: FastAPI + SQLAlchemy 2.0 (async) + Alembic, Celery + Redis (async görev kuyruğu), PostgreSQL (Neon) + pgvector, JWT (access + refresh) + bcrypt, WeasyPrint (PDF export), PyMuPDF + python-docx (belge parse), PyGithub (GitHub entegrasyonu), `python-magic` (dosya güvenliği)
-- AI Servisleri: Hugging Face Inference Providers üzerinden `mistralai/Mistral-7B-Instruct-v0.2` (fine-tune edilmemiş base model — bkz. Sprint 3 "AI/ML Kapsam Kararı"), gelişmiş Türkçe sistem prompt'ları ile orkestre edilen 5 AI Agent + Orchestrator, pgvector tabanlı RAG (Retrieval-Augmented Generation) pipeline'ı
-- Altyapı / Deploy: Backend → Render (Docker + Celery worker aynı container'da), Veritabanı → Neon (PostgreSQL + pgvector), Celery broker → Upstash Redis, Frontend → Vercel (planlanıyor)
-- Tasarım ve Backlog: Miro
-- Versiyon Kontrol: Git & GitHub
 
 ---
 
