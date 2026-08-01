@@ -99,7 +99,8 @@
     </div>
   </div>
 
-  {% if body_text %}
+  {% set has_about_section = sections | selectattr('type', 'equalto', 'about') | list | length > 0 %}
+  {% if body_text and not has_about_section %}
   <div class="section">
     <div class="section-title">Profil</div>
     <div class="profile-text">{{ body_text }}</div>
@@ -227,7 +228,7 @@
         {% for item in section.content['items'] %}<span>{{ item }}</span>{% endfor %}
       </div>
 
-    {% elif section.type in ('declaration', 'custom') %}
+    {% elif section.type in ('about', 'declaration', 'custom') %}
       <div class="profile-text">{{ section.content.text }}</div>
 
     {% endif %}

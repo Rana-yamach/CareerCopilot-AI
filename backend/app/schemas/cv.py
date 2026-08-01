@@ -10,6 +10,7 @@ from app.core.constants import (
 )
 
 SectionType = Literal[
+    "about",
     "education",
     "experience",
     "skills",

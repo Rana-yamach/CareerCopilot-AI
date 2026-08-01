@@ -12,6 +12,7 @@ from app.core.logging import get_logger
 logger = get_logger(__name__)
 
 SECTION_TITLES_TR = {
+    "about": "Hakkımda",
     "education": "Eğitim", "experience": "Deneyim", "skills": "Yetenekler",
     "languages": "Diller", "certificates": "Sertifikalar", "interests": "İlgi Alanları",
     "projects": "Projeler", "courses": "Kurslar", "awards": "Ödüller",
@@ -29,7 +30,7 @@ def _render_items_tr(section_type: str, content: dict) -> list[str]:
             if values:
                 lines.append(f"{label}: {', '.join(values)}")
         return lines
-    if section_type in ("declaration", "custom"):
+    if section_type in ("about", "declaration", "custom"):
         text = content.get("text")
         if text:
             lines.append(text)
@@ -87,6 +88,54 @@ def _fallback_text_en(personal: dict, sections: list[dict]) -> str:
     return text + filler
 
 
+_BROKEN_OUTPUT_MARKERS = (
+    "as a helpful assistant",
+    "i understand the instructions",
+    "i will translate",
+    "i will generate",
+    "i will write",
+    "here's a summary",
+    "these are the instructions",
+    "yardımcı asistan",
+    "aşağıda verilen",
+    "'type':",
+    "'personal':",
+    "\"type\":",
+    "{'name':",
+)
+
+_TR_CHARS = "çğıöşüÇĞİÖŞÜ"
+
+
+def _looks_broken(text: str, lang: str, personal: dict, sections: list[dict]) -> bool:
+    """LLM'in gerçek bir CV metni yerine talimatı/ham veriyi geri kustuğu ya
+    da tamamen alakasız/yanlış dilde bir şey ürettiği durumları yakalar (bkz.
+    cv_writer_tr/en.txt üstündeki KESİN KURALLAR). Sabit kelime listesi tek
+    başına yetersiz kaldığı için (model her seferinde farklı şekilde
+    saçmalayabiliyor), asıl kontrol modelin gerçek girdi verisiyle (isim,
+    bölüm başlıkları) hiç örtüşüp örtüşmediğine bakar — bu, spesifik
+    ifadelerden bağımsız, çok daha genel bir "alakasızlık" testidir.
+    """
+    stripped = text.strip()
+    if len(stripped) < 100:
+        return True
+
+    lowered = stripped.lower()
+    if any(marker in lowered for marker in _BROKEN_OUTPUT_MARKERS):
+        return True
+
+    if lang == "tr" and not any(ch in stripped for ch in _TR_CHARS):
+        return True
+
+    reference_terms = [personal.get("name", "")]
+    reference_terms.extend(section.get("title", "") for section in sections)
+    reference_terms = [t for t in reference_terms if t and len(t) > 2]
+    if reference_terms and not any(term.lower() in lowered for term in reference_terms):
+        return True
+
+    return False
+
+
 class CVWriterAgent(BaseAgent):
     name = "cv_writer_agent"
 
@@ -115,7 +164,10 @@ class CVWriterAgent(BaseAgent):
         self.system_prompt_path = "cv_writer_tr.txt" if lang == "tr" else "cv_writer_en.txt"
         try:
             prompt = self.load_prompt(personal=personal, sections=sections)
-            return await self.llm_client.generate(prompt, max_tokens=1024, temperature=0.6)
+            result = await self.llm_client.generate(prompt, max_tokens=1024, temperature=0.6)
+            if _looks_broken(result, lang, personal, sections):
+                raise ValueError("cv_writer_output_invalid")
+            return result
         except Exception:  # noqa: BLE001
             logger.warning("CV Writer Agent LLM çağrısı başarısız/atlandı, şablon moduna geçildi (%s).", lang)
             return _fallback_text_tr(personal, sections) if lang == "tr" else _fallback_text_en(personal, sections)
