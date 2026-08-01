@@ -1,8 +1,9 @@
-"""CV Writer Agent (TASK-204): form_data.sections -> text_tr / text_en.
+"""CV Writer Agent (TASK-204): form_data.sections -> text_tr.
 
 LLM kullanılamıyorsa (token yok / hata), sections verisinden şablon tabanlı
 akıcı bir taslak metin üretilir; böylece pipeline (form -> editör -> PDF)
-fine-tune model beklemeden uçtan uca test edilebilir.
+fine-tune model beklemeden uçtan uca test edilebilir. Uygulama yalnızca
+Türkçe CV üretir (İngilizce desteği kaldırıldı).
 """
 from __future__ import annotations
 
@@ -67,27 +68,6 @@ def _fallback_text_tr(personal: dict, sections: list[dict]) -> str:
     return text + filler
 
 
-def _fallback_text_en(personal: dict, sections: list[dict]) -> str:
-    parts = [personal.get("name", ""), personal.get("email", "")]
-    contact_bits = [personal.get("phone"), personal.get("location"), personal.get("linkedin_url"), personal.get("github_url")]
-    parts.append(" | ".join(b for b in contact_bits if b))
-    parts.append("")
-
-    for section in sorted(sections, key=lambda s: s.get("order", 0)):
-        parts.append(f"## {section.get('title') or section['type'].capitalize()}")
-        parts.extend(_render_items_tr(section["type"], section.get("content", {})))
-        parts.append("")
-
-    text = "\n".join(p for p in parts if p is not None)
-    filler = (
-        "\n\nThis CV presents the candidate's experience, education, and skills in a "
-        "structured format. The candidate demonstrates a professional profile aligned "
-        "with the target role. Once the fine-tuned language model is integrated, this "
-        "text will be regenerated with a more fluent, personalized narrative."
-    )
-    return text + filler
-
-
 _BROKEN_OUTPUT_MARKERS = (
     "as a helpful assistant",
     "i understand the instructions",
@@ -107,10 +87,10 @@ _BROKEN_OUTPUT_MARKERS = (
 _TR_CHARS = "çğıöşüÇĞİÖŞÜ"
 
 
-def _looks_broken(text: str, lang: str, personal: dict, sections: list[dict]) -> bool:
+def _looks_broken(text: str, personal: dict, sections: list[dict]) -> bool:
     """LLM'in gerçek bir CV metni yerine talimatı/ham veriyi geri kustuğu ya
     da tamamen alakasız/yanlış dilde bir şey ürettiği durumları yakalar (bkz.
-    cv_writer_tr/en.txt üstündeki KESİN KURALLAR). Sabit kelime listesi tek
+    cv_writer_tr.txt üstündeki KESİN KURALLAR). Sabit kelime listesi tek
     başına yetersiz kaldığı için (model her seferinde farklı şekilde
     saçmalayabiliyor), asıl kontrol modelin gerçek girdi verisiyle (isim,
     bölüm başlıkları) hiç örtüşüp örtüşmediğine bakar — bu, spesifik
@@ -124,7 +104,7 @@ def _looks_broken(text: str, lang: str, personal: dict, sections: list[dict]) ->
     if any(marker in lowered for marker in _BROKEN_OUTPUT_MARKERS):
         return True
 
-    if lang == "tr" and not any(ch in stripped for ch in _TR_CHARS):
+    if not any(ch in stripped for ch in _TR_CHARS):
         return True
 
     reference_terms = [personal.get("name", "")]
@@ -138,18 +118,13 @@ def _looks_broken(text: str, lang: str, personal: dict, sections: list[dict]) ->
 
 class CVWriterAgent(BaseAgent):
     name = "cv_writer_agent"
+    system_prompt_path = "cv_writer_tr.txt"
 
-    async def write(self, form_data: dict, output_language: str) -> dict:
+    async def write(self, form_data: dict) -> dict:
         personal = form_data.get("personal", {})
         sections = form_data.get("sections", [])
 
-        text_tr: str | None = None
-        text_en: str | None = None
-
-        if output_language in ("tr", "both"):
-            text_tr = await self._generate_one(personal, sections, lang="tr")
-        if output_language in ("en", "both"):
-            text_en = await self._generate_one(personal, sections, lang="en")
+        text_tr = await self._generate_one(personal, sections)
 
         cv_json = {
             "personal": personal,
@@ -158,16 +133,15 @@ class CVWriterAgent(BaseAgent):
                 for s in sections
             ],
         }
-        return {"cv_json": cv_json, "text_tr": text_tr, "text_en": text_en}
+        return {"cv_json": cv_json, "text_tr": text_tr}
 
-    async def _generate_one(self, personal: dict, sections: list[dict], lang: str) -> str:
-        self.system_prompt_path = "cv_writer_tr.txt" if lang == "tr" else "cv_writer_en.txt"
+    async def _generate_one(self, personal: dict, sections: list[dict]) -> str:
         try:
             prompt = self.load_prompt(personal=personal, sections=sections)
             result = await self.llm_client.generate(prompt, max_tokens=1024, temperature=0.6)
-            if _looks_broken(result, lang, personal, sections):
+            if _looks_broken(result, personal, sections):
                 raise ValueError("cv_writer_output_invalid")
             return result
         except Exception:  # noqa: BLE001
-            logger.warning("CV Writer Agent LLM çağrısı başarısız/atlandı, şablon moduna geçildi (%s).", lang)
-            return _fallback_text_tr(personal, sections) if lang == "tr" else _fallback_text_en(personal, sections)
+            logger.warning("CV Writer Agent LLM çağrısı başarısız/atlandı, şablon moduna geçildi.")
+            return _fallback_text_tr(personal, sections)

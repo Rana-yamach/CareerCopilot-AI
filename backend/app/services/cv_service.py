@@ -27,11 +27,8 @@ async def create_draft(db: AsyncSession, user_id: uuid.UUID, form_data: dict, ou
     return draft
 
 
-def _render_draft_pdf_bytes(draft: CVDraft, language: str) -> bytes:
-    text = draft.user_edited_text or (
-        draft.generated_text_tr if language == "tr" else draft.generated_text_en
-    )
-    text = text or ""
+def _render_draft_pdf_bytes(draft: CVDraft) -> bytes:
+    text = draft.user_edited_text or draft.generated_text_tr or ""
 
     form_data = draft.form_data or {}
     personal = form_data.get("personal", {})
@@ -48,25 +45,23 @@ def _render_draft_pdf_bytes(draft: CVDraft, language: str) -> bytes:
     return render_cv_pdf(personal=personal, sections=sections, body_text=text, headline=headline)
 
 
-def preview_draft_pdf(draft: CVDraft, language: str) -> bytes:
+def preview_draft_pdf(draft: CVDraft) -> bytes:
     """CVBuilderEditorPage'in canlı PDF önizlemesi için: kalıcı belge/durum
     değişikliği yapmadan (export'un aksine) anlık PDF byte'ları üretir.
     `form_data.sections` taslak oluşturulduğu andan itibaren mevcut olduğu
     için `status="draft"` iken de çalışır.
     """
-    return _render_draft_pdf_bytes(draft, language)
+    return _render_draft_pdf_bytes(draft)
 
 
 async def export_draft_to_pdf(
-    db: AsyncSession, draft: CVDraft, language: str, upload_dir: str
+    db: AsyncSession, draft: CVDraft, upload_dir: str
 ) -> tuple[UploadedDocument, bytes]:
     if draft.status == CVDraftStatus.DRAFT:
         raise ConflictError(MSG_CV_NOT_GENERATED_YET)
 
-    text = draft.user_edited_text or (
-        draft.generated_text_tr if language == "tr" else draft.generated_text_en
-    )
-    pdf_bytes = _render_draft_pdf_bytes(draft, language)
+    text = draft.user_edited_text or draft.generated_text_tr
+    pdf_bytes = _render_draft_pdf_bytes(draft)
 
     user_dir = os.path.join(upload_dir, str(draft.user_id))
     os.makedirs(user_dir, exist_ok=True)

@@ -27,7 +27,7 @@ SectionType = Literal[
     "custom",
 ]
 
-OutputLanguageLiteral = Literal["tr", "en", "both"]
+OutputLanguageLiteral = Literal["tr"]
 
 
 class PersonalInfo(BaseModel):
@@ -119,7 +119,7 @@ class CVDraftListResponse(BaseModel):
 
 class ExportPdfRequest(BaseModel):
     draft_id: str
-    language: Literal["tr", "en"]
+    language: Literal["tr"] = "tr"
 
 
 class ExportPdfResponse(BaseModel):

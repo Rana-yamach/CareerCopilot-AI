@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import uuid
-from typing import Literal
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response
@@ -148,9 +147,7 @@ async def export_pdf(
     if draft.user_id != current_user.id:
         raise ForbiddenError(MSG_FORBIDDEN)
 
-    document, _ = await cv_service.export_draft_to_pdf(
-        db, draft, language=payload.language, upload_dir=settings.upload_dir
-    )
+    document, _ = await cv_service.export_draft_to_pdf(db, draft, upload_dir=settings.upload_dir)
 
     return ExportPdfResponse(
         document_id=str(document.id),
@@ -162,7 +159,6 @@ async def export_pdf(
 @router.get("/draft/{draft_id}/preview-pdf")
 async def preview_draft_pdf(
     draft_id: uuid.UUID,
-    language: Literal["tr", "en"] = "tr",
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> Response:
@@ -175,7 +171,7 @@ async def preview_draft_pdf(
     if draft.user_id != current_user.id:
         raise ForbiddenError(MSG_FORBIDDEN)
 
-    pdf_bytes = cv_service.preview_draft_pdf(draft, language=language)
+    pdf_bytes = cv_service.preview_draft_pdf(draft)
     return Response(content=pdf_bytes, media_type="application/pdf")
 
 

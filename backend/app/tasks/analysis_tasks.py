@@ -28,10 +28,9 @@ async def _generate_cv(draft_id: str) -> str:
             return "failed"
 
         try:
-            result = await CVWriterAgent().write(draft.form_data, draft.output_language.value)
+            result = await CVWriterAgent().write(draft.form_data)
             draft.cv_json = result["cv_json"]
             draft.generated_text_tr = result["text_tr"]
-            draft.generated_text_en = result["text_en"]
             draft.status = CVDraftStatus.GENERATED
         except Exception:
             logger.exception("generate_cv_task başarısız oldu: %s", draft_id)
