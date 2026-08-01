@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import uuid
+from typing import Literal
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response
@@ -156,6 +157,26 @@ async def export_pdf(
         draft_id=str(draft.id),
         download_url=f"/api/v1/cv/download/{document.id}",
     )
+
+
+@router.get("/draft/{draft_id}/preview-pdf")
+async def preview_draft_pdf(
+    draft_id: uuid.UUID,
+    language: Literal["tr", "en"] = "tr",
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Response:
+    """CV Builder Editor'ün canlı PDF önizlemesi (export'un aksine kalıcı
+    belge/durum değişikliği yapmaz, `inline` gösterilebilir).
+    """
+    draft = await db.get(CVDraft, draft_id)
+    if draft is None:
+        raise NotFoundError(MSG_CV_DRAFT_NOT_FOUND)
+    if draft.user_id != current_user.id:
+        raise ForbiddenError(MSG_FORBIDDEN)
+
+    pdf_bytes = cv_service.preview_draft_pdf(draft, language=language)
+    return Response(content=pdf_bytes, media_type="application/pdf")
 
 
 @router.get("/download/{document_id}")
