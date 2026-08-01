@@ -349,8 +349,8 @@ Sprint 2 sonunda takım süreçlerimizin, çalışma dinamiklerimizin ve aldığ
 
 ---
 
-#### Sprint 3
-##### Backlog Düzeni ve Story Seçimleri
+## Sprint 3
+### Backlog Düzeni ve Story Seçimleri
 Sprint 3 (20 Temmuz 2026 – 2 Ağustos 2026), TASKS.md'de planlandığı üzere **"Cilalama + Canlı Ortam + Demo"** odaklı olarak kurgulanmıştı. Ancak sprint ilerledikçe, önceki sprintlerde base model (Mistral-7B) ile üretilen çıktılarda ciddi bir **sağlamlık (robustness) sorunu** gözlemlendi: Model sık sık JSON çıktısını markdown kod bloğuna sarıyor, bu da ajanların doğrudan heuristik (yedek) moda düşmesine yol açıyordu. Ekip, planlanan "cila" işlerinden önce altyapı sağlamlığını ve canlıya alma (deploy) operasyonunu en yüksek önceliğe aldı. Sprint 3 stratejik kararları şu şekildedir:
 
 *   **Öncelik Değişikliği (Re-plan) ve Sağlamlık:** LLM çıktı ayrıştırma sağlamlığı (`_extract_json_payload`) ve CV Agent kısmi kurtarma mekanizması önceliklendirilerek heuristik moda düşme sorunu büyük ölçüde çözüldü.
@@ -360,7 +360,7 @@ Sprint 3 (20 Temmuz 2026 – 2 Ağustos 2026), TASKS.md'de planlandığı üzere
 
 ---
 
-##### AI/ML Kapsam Kararı: Fine-Tuning'in Kalıcı Olarak İptali
+### AI/ML Kapsam Kararı: Fine-Tuning'in Kalıcı Olarak İptali
 Proje boyunca fine-tuning'e ayrılan tüm backlog maddeleri bu sprintte resmî olarak kapatılmıştır. Gerekçe tektir: **Projeye özgü, yeterli hacim ve kalitede bir Türkçe kariyer-koçluğu/CV fine-tuning veri seti temin edilememiştir.** 
 
 *   **Kalıcı Mimari Karar:** Proje, LLM katmanında **mistralai/Mistral-7B-Instruct-v0.2** (fine-tune edilmemiş base model) + **gelişmiş Türkçe sistem prompt'ları** + **pgvector tabanlı RAG** üçlüsü üzerine kalıcı olarak sabitlenmiştir. 
@@ -368,7 +368,7 @@ Proje boyunca fine-tuning'e ayrılan tüm backlog maddeleri bu sprintte resmî o
 
 ---
 
-###### Sprint 3 Puan Durumu Tablosu
+#### Sprint 3 Puan Durumu Tablosu
 Projemizin genel 100 Puanlık hacmi üzerinden, Sprint 3 iş yükü (Sprint 3'e özgü 30 puan + Sprint 2'den devreden 11 puan) toplam **41 Puan** olarak planlanmıştır.
 
 | Durum | Story Sayısı | Toplam SP | Açıklama |
@@ -380,7 +380,7 @@ Projemizin genel 100 Puanlık hacmi üzerinden, Sprint 3 iş yükü (Sprint 3'e 
 
 ---
 
-##### Daily Scrum
+### Daily Scrum
 Sprint 3 boyunca Daily Scrum güncellemeleri WhatsApp üzerinden yazılı olarak yürütülmeye devam edilmiştir. Bu sprintte gündemin büyük bölümünü şu konular oluşturmuştur:
 *  LLM çıktılarının neden sık sık heuristik moda düştüğü ve JSON parse sorunları.
 *  Render'daki bellek (OOM) sorununun teşhisi ve embedding mimarisinin HF Inference Providers'a taşınması kararı.
@@ -391,21 +391,21 @@ Daily Scrum yazışma geçmişleri PDF formatında dokümante edilerek depoda sa
 
 ---
 
-##### Sprint Board Screenshotları
-###### Sprint Sonu (Done ve Backlog Kart Dağılımı)
-![Sprint 3 Miro Board](docs/sprint3/sprint3_board.png)
+### Sprint Board Screenshotları
+#### Sprint Sonu (Done ve Backlog Kart Dağılımı)
+![Sprint 3 Miro Board](docs/sprint3/sprint3.PNG)
 
 ---
 
-##### Ürün Durumu: Jüri Demo Videosu
+### Ürün Durumu: Jüri Demo Videosu
 MVP kapsamındaki tüm geliştirmeleri, çoklu ajan (Multi-Agent) mimarisini, RAG altyapısını ve ürünün canlı ortamdaki kusursuz kullanım senaryosunu izleyebileceğiniz 3 dakikalık proje tanıtım videomuz aşağıdadır:
 
-[![CareerCopilot AI Demo İzle](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID/hqdefault.jpg)](https://www.youtube.com/watch?v=YOUTUBE_VIDEO_ID)
+[![CareerCopilot AI Demo İzle](https://img.youtube.com/vi/E1ozeTY9wpg/hqdefault.jpg)](https://www.youtube.com/watch?v=E1ozeTY9wpg)
 *(Not: Videoyu izlemek için yukarıdaki görsele tıklayınız)*
 
 ---
 
-##### Sprint Review
+### Sprint Review
 Sprint 3, planlanan "cila ve demo" hedefinden çok, ürünün **temel güvenilirliğini (robustness)** artırmaya ve canlıya çıkmaya odaklanan bir sprint olmuştur. Öne çıkan sonuçlar:
 *   **LLM Çıktı Sağlamlığı:** `BaseAgent._extract_json_payload()` eklenerek, base modelin markdown/açıklama ile sardığı JSON çıktıları artık ayrıştırılabiliyor. CV Agent artık `cv_score` gibi tek bir alan eksik olduğunda doğrudan tam heuristik moda düşmüyor, `parsed_skills` üzerinden kısmi kurtarma yapabiliyor.
 *   **Kapsam Netleştirme:** CV üretim akışı yalnızca Türkçe'ye indirgendi. Bu durum hem LLM çağrı sayısını hem de arayüz karmaşıklığını ciddi şekilde azalttı.
@@ -415,14 +415,14 @@ Sprint 3, planlanan "cila ve demo" hedefinden çok, ürünün **temel güvenilir
 
 ---
 
-##### Sprint Retrospective
-###### 🟢 Neler İyi Gitti?
+### Sprint Retrospective
+#### 🟢 Neler İyi Gitti?
 *   **Harika Bitirme Oranı:** 6 haftalık zorlu maratonun sonunda planlanan 100 puanlık ürün hedefini, 88 puanlık devasa bir teslimat hacmi ile **%88'lik başarı oranıyla** kapatmak, takımın Agile disiplinine sadakatinin en büyük kanıtıdır.
 *   **Sorun Önceliklendirme Refleksi:** Takım, planlanan "UI cila" işlerine körü körüne devam etmek yerine, üretimi doğrudan etkileyen bir sağlamlık sorununu (LLM JSON ayrıştırma) fark edip önceliklendirdi.
 *   **Gerçek Ortam Refleksi:** Deploy denemesi kâğıt üzerinde kalmadı; Render'da gerçek bir OOM sorunu gözlemlenip kök nedeniyle (yerel model yükleme) birlikte çözüldü. Ekibin kriz yönetimi harikaydı.
 *   **Belirsizliğin Kalıcı Olarak Kapatılması:** İki sprint boyunca askıda kalan fine-tuning belirsizliği, açık bir kararla resmen kapatıldı ve takım enerjisini tamamen Base Model + RAG stabilizasyonuna aktardı.
 
-###### 🟡 Geliştirilmesi Gerekenler / Karşılaşılan Zorluklar
+#### 🟡 Geliştirilmesi Gerekenler / Karşılaşılan Zorluklar
 *   **Base Model Bağımlılığı Riski:** Fine-tuning'in iptal edilmesiyle çıktı kalitesi tamamen prompt mühendisliği ve RAG içerik zenginliğine bağımlı hâle geldi. RAG seed içeriğinin pozisyon başına hâlâ ince (~120-150 kelime) kalması bu riski büyütmektedir.
 *   **Son Ana Kalan Cilalar:** Eforun tamamı canlıya dağıtım ve sistem sağlamlığına (robustness) aktarıldığı için; Recharts tabanlı Dashboard istatistikleri, iskelet yükleyiciler (skeleton loaders) ve keep-alive ping servisi gibi "nice-to-have" UI cilaları 10 Puanlık bir Backlog olarak kalmıştır. Bir sonraki projelerde UI cilalarına paralel efor ayrılması hedeflenmelidir.
 
