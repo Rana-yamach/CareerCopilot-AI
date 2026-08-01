@@ -38,8 +38,19 @@ async def export_draft_to_pdf(
     )
     text = text or ""
 
-    personal = (draft.form_data or {}).get("personal", {})
-    pdf_bytes = render_cv_pdf(name=personal.get("name", ""), email=personal.get("email", ""), body_text=text)
+    form_data = draft.form_data or {}
+    personal = form_data.get("personal", {})
+    sections = sorted(form_data.get("sections", []), key=lambda s: s.get("order", 0))
+
+    headline = ""
+    for section in sections:
+        if section.get("type") == "experience":
+            items = section.get("content", {}).get("items") or []
+            if items:
+                headline = items[0].get("title", "")
+            break
+
+    pdf_bytes = render_cv_pdf(personal=personal, sections=sections, body_text=text, headline=headline)
 
     user_dir = os.path.join(upload_dir, str(draft.user_id))
     os.makedirs(user_dir, exist_ok=True)

@@ -2,51 +2,85 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8" />
-<title>{{ name }} - CV</title>
+<title>{{ personal.name }} - CV</title>
 <style>
-  @page { size: A4; margin: 1.8cm; }
+  @page { size: A4; margin: 1.6cm; }
+  * { box-sizing: border-box; }
   body {
     font-family: "DejaVu Sans", "Noto Sans", sans-serif;
     color: #1f2937;
-    font-size: 10.5pt;
-    line-height: 1.55;
+    font-size: 9.7pt;
+    line-height: 1.45;
   }
   .header {
-    border-bottom: 3px solid #2563eb;
-    padding-bottom: 10px;
-    margin-bottom: 16px;
+    border-bottom: 2px solid #1f2937;
+    padding-bottom: 8px;
+    margin-bottom: 14px;
   }
   h1 {
-    font-size: 22pt;
-    margin: 0 0 4px 0;
+    font-size: 21pt;
+    margin: 0 0 2px 0;
     color: #111827;
-    letter-spacing: 0.5px;
+  }
+  .headline {
+    font-size: 11pt;
+    color: #374151;
+    font-style: italic;
+    margin-bottom: 6px;
   }
   .contact {
     color: #4b5563;
-    font-size: 9.5pt;
+    font-size: 9pt;
   }
-  .contact span { margin-right: 12px; }
+  .contact .item {
+    display: inline-block;
+    margin-right: 14px;
+    white-space: nowrap;
+  }
+  .contact svg { vertical-align: -2px; margin-right: 3px; }
+  .section { margin-top: 13px; }
   .section-title {
-    font-size: 12.5pt;
-    color: #2563eb;
+    font-size: 11.5pt;
+    font-weight: bold;
+    color: #111827;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 1px solid #dbeafe;
+    letter-spacing: 0.5px;
+    border-bottom: 1.4px solid #9ca3af;
     padding-bottom: 3px;
-    margin-top: 18px;
-    margin-bottom: 8px;
+    margin-bottom: 7px;
   }
-  pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: "DejaVu Sans", "Noto Sans", sans-serif;
-    font-size: 10.5pt;
-    margin: 0;
+  .profile-text {
+    text-align: justify;
+    color: #374151;
   }
+  .entry { margin-bottom: 8px; }
+  .entry:last-child { margin-bottom: 0; }
+  .entry-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .entry-title { font-weight: bold; color: #111827; }
+  .entry-sub { color: #4b5563; font-size: 9pt; }
+  .entry-period { color: #6b7280; font-size: 8.5pt; white-space: nowrap; }
+  .entry-desc { margin-top: 2px; color: #374151; font-size: 9pt; }
+  .two-col {
+    column-count: 2;
+    column-gap: 22px;
+  }
+  .two-col .row {
+    break-inside: avoid;
+    margin-bottom: 5px;
+  }
+  .tag-cloud span {
+    display: inline-block;
+    margin: 0 8px 4px 0;
+  }
+  .bullet-list { margin: 0; padding-left: 14px; }
+  .bullet-list li { margin-bottom: 4px; }
   .footer-note {
-    margin-top: 24px;
-    font-size: 8pt;
+    margin-top: 18px;
+    font-size: 7.5pt;
     color: #9ca3af;
     text-align: center;
   }
@@ -54,11 +88,152 @@
 </head>
 <body>
   <div class="header">
-    <h1>{{ name }}</h1>
-    <div class="contact">{{ email }}</div>
+    <h1>{{ personal.name }}</h1>
+    {% if headline %}<div class="headline">{{ headline }}</div>{% endif %}
+    <div class="contact">
+      {% if personal.email %}<span class="item">✉ {{ personal.email }}</span>{% endif %}
+      {% if personal.phone %}<span class="item">☎ {{ personal.phone }}</span>{% endif %}
+      {% if personal.location %}<span class="item">📍 {{ personal.location }}</span>{% endif %}
+      {% if personal.linkedin_url %}<span class="item">🔗 {{ personal.linkedin_url }}</span>{% endif %}
+      {% if personal.github_url %}<span class="item">🔗 {{ personal.github_url }}</span>{% endif %}
+    </div>
   </div>
-  <div class="section-title">Özgeçmiş</div>
-  <pre>{{ body_text }}</pre>
+
+  {% if body_text %}
+  <div class="section">
+    <div class="section-title">Profil</div>
+    <div class="profile-text">{{ body_text }}</div>
+  </div>
+  {% endif %}
+
+  {% for section in sections %}
+  <div class="section">
+    <div class="section-title">{{ section.title }}</div>
+
+    {% if section.type == 'education' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.degree }}</span>
+          <span class="entry-period">{{ item.year }}</span>
+        </div>
+        <div class="entry-sub">{{ item.institution }}{% if item.gpa %} &middot; GPA: {{ item.gpa }}{% endif %}</div>
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'experience' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.title }}</span>
+          <span class="entry-period">{{ item.start_date }} - {{ item.end_date }}</span>
+        </div>
+        <div class="entry-sub">{{ item.company }}</div>
+        {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'skills' %}
+      <div class="two-col tag-cloud">
+        {% for skill in (section.content.languages or []) + (section.content.frameworks or []) + (section.content.tools or []) %}
+        <div class="row"><span>{{ skill }}</span></div>
+        {% endfor %}
+      </div>
+
+    {% elif section.type == 'languages' %}
+      <div class="two-col">
+        {% for item in section.content['items'] %}
+        <div class="row"><span class="entry-title">{{ item.language }}</span> &middot; {{ item.level }}</div>
+        {% endfor %}
+      </div>
+
+    {% elif section.type == 'certificates' %}
+      <div class="two-col">
+        {% for item in section.content['items'] %}
+        <div class="row">
+          <span class="entry-title">{{ item.name }}</span><br />
+          <span class="entry-sub">{{ item.issuer }}{% if item.date %} &middot; {{ item.date }}{% endif %}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+    {% elif section.type == 'projects' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.name }}</span>
+        </div>
+        {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+        {% if item.tech_stack %}<div class="entry-sub">{{ item.tech_stack | join(' / ') }}</div>{% endif %}
+        {% if item.repo_url %}<div class="entry-sub">{{ item.repo_url }}</div>{% endif %}
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'courses' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.name }}</span>
+          <span class="entry-period">{{ item.completion_date }}</span>
+        </div>
+        <div class="entry-sub">{{ item.platform }}</div>
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'awards' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.name }}</span>
+          <span class="entry-period">{{ item.year }}</span>
+        </div>
+        <div class="entry-sub">{{ item.issuer }}</div>
+        {% if item.description %}<div class="entry-desc">{{ item.description }}</div>{% endif %}
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'organisations' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.name }}</span>
+          <span class="entry-period">{{ item.start_date }} - {{ item.end_date }}</span>
+        </div>
+        <div class="entry-sub">{{ item.role }}</div>
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'publications' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <div class="entry-head">
+          <span class="entry-title">{{ item.title }}</span>
+          <span class="entry-period">{{ item.date }}</span>
+        </div>
+        <div class="entry-sub">{{ item.venue }}{% if item.url %} &middot; {{ item.url }}{% endif %}</div>
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'references' %}
+      {% for item in section.content['items'] %}
+      <div class="entry">
+        <span class="entry-title">{{ item.name }}</span> &middot; {{ item.title }}, {{ item.company }}
+        <div class="entry-sub">{{ item.contact }}</div>
+      </div>
+      {% endfor %}
+
+    {% elif section.type == 'interests' %}
+      <div class="tag-cloud">
+        {% for item in section.content['items'] %}<span>{{ item }}</span>{% endfor %}
+      </div>
+
+    {% elif section.type in ('declaration', 'custom') %}
+      <div class="profile-text">{{ section.content.text }}</div>
+
+    {% endif %}
+  </div>
+  {% endfor %}
+
   <div class="footer-note">CareerCopilot AI ile oluşturulmuştur</div>
 </body>
 </html>
